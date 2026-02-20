@@ -1,5 +1,5 @@
  <script lang="ts">
-	import type { EventItem } from "$lib/types/event";
+	import type { EventItem } from "$lib/context/js/types/event";
 	import { events } from "$lib/context/js/tests";
 
 	// Get next 3 events for the week preview

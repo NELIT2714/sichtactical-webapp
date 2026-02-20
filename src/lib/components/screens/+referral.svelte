@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { User } from "$lib/types/user";
+	import type { User } from "$lib/context/js/types/user";
 
 	export let user : User
 

@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { EventItem } from "$lib/types/event";
+	import type { EventItem } from "$lib/context/js/types/event";
 	import { goto, invalidateAll } from "$app/navigation";
 	import { modal } from "$lib/context/js/store/modal.store";
+	import { API } from "$lib/context/js/axios";
 
 	import CancelRegistrationModal from "$lib/components/dropdowns/+cancel-registration.svelte";
-	import { API } from "$lib/context/js/axios";
 
 	export let eventInfo : EventItem;
 

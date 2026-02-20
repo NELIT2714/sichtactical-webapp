@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { User } from "$lib/types/user";
+	import type { User } from "$lib/context/js/types/user";
 	import { progressForXP } from "$lib/context/js/xp";
 	import { fadeUp } from "$lib/context/js/ui/fadeUp";
 
@@ -10,7 +10,7 @@
 </script>
 
 <section class="px-4 opacity-0">
-	<div class="md:container md:mx-auto bg-[#1a1a2e] rounded-2xl p-4 border border-blue-500/15 shadow-xl space-y-3">
+	<div class="bg-[#1a1a2e] rounded-2xl p-4 border border-blue-500/15 shadow-xl space-y-3">
 		<div class="space-y-1">
 			<h2 class="text-2xl font-bold">
 				{user.call_sign || `${user.telegram_data.first_name}${user.telegram_data.last_name ? ` ${user.telegram_data.last_name}` : ""}`}
@@ -21,8 +21,8 @@
 					<span class="text-xs text-white/50">Опыт до следующего уровня</span>
 					<span class="text-xs font-semibold text-white/70">{experience} / {experienceToNextLevel} XP</span>
 				</div>
-				<div class="h-2 bg-white/[0.08] rounded-full overflow-hidden">
-					<div class="h-full rounded-full bg-gradient-to-r from-amber-600 to-amber-700 transition-all duration-500" style="width: {levelProgress}%;"></div>
+				<div class="h-1.5 bg-white/[0.08] rounded-full overflow-hidden">
+					<div class="h-full rounded-full bg-gradient-to-r from-blue-800 to-blue-400 transition-all duration-500" style="width: {levelProgress}%;"></div>
 				</div>
 			</div>
 		</div>
