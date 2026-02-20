@@ -1,7 +1,5 @@
 <script lang="ts">
 	import { onMount } from "svelte";
-	import { getToken } from "$lib/context/js/auth";
-	import { authToken } from "$lib/context/js/auth";
 
 	import ModalProvider from "$lib/components/+modal-provider.svelte";
 	import Footer from "$lib/components/+footer.svelte";

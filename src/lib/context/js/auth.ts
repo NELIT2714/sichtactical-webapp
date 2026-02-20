@@ -1,6 +1,6 @@
-import { writable } from "svelte/store";
+import { get, writable } from "svelte/store";
 import { API } from "$lib/context/js/axios";
-import type { User } from "$lib/types/user";
+import type { User } from "$lib/context/js/types/user";
 // "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMDMzNjQxODY5IiwidXNlcl9pZCI6NCwidGVsZWdyYW1faWQiOiIxMDMzNjQxODY5IiwiaWF0IjoxNzcxMTkwMTQ5LCJleHAiOjE3NzIwNTQxNDl9.Q_uFzjz7w0ig7djkSnSqKIezgfyiaXijiVDW2RrLNONHJHsv4TRUvovY-iFY4TLNpyCtlkjpo3GuuHYoJ02vlg"
 export const authToken = writable(null);
 
@@ -38,4 +38,52 @@ export const getToken = async (initData: string, telegramId: string) => {
 
 	authToken.set(response.data.token);
 	return response.data.token;
+};
+
+let initPromise: Promise<void> | null = null;
+
+export const ensureAuth = (tg: any): Promise<void> => {
+
+	console.log("🟡 ensureAuth called");
+
+	const token = get(authToken);
+
+	if (token) {
+		console.log("🟢 Token already exists → skip init");
+		return Promise.resolve();
+	}
+
+	if (initPromise) {
+		console.log("🟠 Init already running → reusing promise");
+		return initPromise;
+	}
+
+	console.log("🔵 No token → starting auth init");
+
+	initPromise = (async () => {
+		if (!tg) {
+			console.error("❌ Telegram WebApp not found");
+			throw new Error("Telegram WebApp not found");
+		}
+
+		const initData = tg.initData;
+		const user = tg.initDataUnsafe?.user;
+
+		if (!initData || !user) {
+			console.error("❌ Invalid Telegram data");
+			throw new Error("Invalid Telegram data");
+		}
+
+		console.log("📡 Creating user...");
+		await createUser(initData, user);
+		console.log("✅ User created");
+
+		console.log("🔐 Getting token...");
+		await getToken(initData, user.id.toString());
+		console.log("✅ Token received");
+
+		console.log("🟢 Auth init finished");
+	})();
+
+	return initPromise;
 };

@@ -2,7 +2,7 @@
 	import { goto } from "$app/navigation";
 </script>
 
-<section class="opacity-0">
+<div>
 	<div class="bg-gradient-to-br from-[#1a2332] to-[#1a1a2e] rounded-2xl p-8 border border-blue-500/20 shadow-xl text-center">
 		<div class="mb-4">
 			<i class="bi bi-calendar-x text-4xl text-white/40"></i>
@@ -15,4 +15,4 @@
 <!--			Смотреть все события-->
 <!--		</button>-->
 	</div>
-</section>
+</div>

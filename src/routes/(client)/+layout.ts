@@ -1,17 +1,22 @@
 import type { LayoutLoad } from "./$types";
 import { API } from "$lib/context/js/axios";
-import { createUser, getToken } from "$lib/context/js/auth";
+import { createUser, ensureAuth, getToken } from "$lib/context/js/auth";
+import { browser } from "$app/environment";
 
 export const ssr = false;
 
 export const load: LayoutLoad = async () => {
-	try {
+
+	const appDataPromise = (async () => {
+		if (!browser) return { user: null, event: null };
+
 		// @ts-ignore
 		// const tg = window.Telegram?.WebApp;
+
 		const tg = {
-			"initData": "query_id=AAGNH5w9AAAAAI0fnD1nrJkO&user=%7B%22id%22%3A1033641869%2C%22first_name%22%3A%22Nelit%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22nelit_dev%22%2C%22language_code%22%3A%22ru%22%2C%22allows_write_to_pm%22%3Atrue%2C%22photo_url%22%3A%22https%3A%5C%2F%5C%2Ft.me%5C%2Fi%5C%2Fuserpic%5C%2F320%5C%2FSvhwdFKVz4CojRE9K3PUhf-jVhOp5tZ353hQGrkO6Ak.svg%22%7D&auth_date=1771580271&signature=goARAdi0rI5e28WpaxCWuou3CMuhV1F1jdLG7zKNAepWLjsREuPx-SUZmsOhPEgZQSiCC1VB2BrBwFbDdcUuAg&hash=27d5b321becea86988efe7dbfd068578b698d62db97c1556b4aa5b6158a8c312",
+			"initData": "query_id=AAGNH5w9AAAAAI0fnD2pE4vw&user=%7B%22id%22%3A1033641869%2C%22first_name%22%3A%22Nelit%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22nelit_dev%22%2C%22language_code%22%3A%22ru%22%2C%22allows_write_to_pm%22%3Atrue%2C%22photo_url%22%3A%22https%3A%5C%2F%5C%2Ft.me%5C%2Fi%5C%2Fuserpic%5C%2F320%5C%2FSvhwdFKVz4CojRE9K3PUhf-jVhOp5tZ353hQGrkO6Ak.svg%22%7D&auth_date=1771596882&signature=RmVTF-3lVqSVuMg5Qoc4EMsYVrevmuuyD_7X6WRR3Q8tkE0fTLXTJjvGuUJJnf53KiHvNuxW3MDIb3N2--UZBA&hash=02e35308935fba73d619d809e63ff9056516397b5a3ce7ba0756ac80e731f3b6",
 			"initDataUnsafe": {
-				"query_id": "AAGNH5w9AAAAAI0fnD1nrJkO",
+				"query_id": "AAGNH5w9AAAAAI0fnD2pE4vw",
 				"user": {
 					"id": 1033641869,
 					"first_name": "Nelit",
@@ -21,9 +26,9 @@ export const load: LayoutLoad = async () => {
 					"allows_write_to_pm": true,
 					"photo_url": "https://t.me/i/userpic/320/SvhwdFKVz4CojRE9K3PUhf-jVhOp5tZ353hQGrkO6Ak.svg"
 				},
-				"auth_date": "1771580271",
-				"signature": "goARAdi0rI5e28WpaxCWuou3CMuhV1F1jdLG7zKNAepWLjsREuPx-SUZmsOhPEgZQSiCC1VB2BrBwFbDdcUuAg",
-				"hash": "27d5b321becea86988efe7dbfd068578b698d62db97c1556b4aa5b6158a8c312"
+				"auth_date": "1771596882",
+				"signature": "RmVTF-3lVqSVuMg5Qoc4EMsYVrevmuuyD_7X6WRR3Q8tkE0fTLXTJjvGuUJJnf53KiHvNuxW3MDIb3N2--UZBA",
+				"hash": "02e35308935fba73d619d809e63ff9056516397b5a3ce7ba0756ac80e731f3b6"
 			},
 			"version": "9.1",
 			"platform": "tdesktop",
@@ -66,7 +71,7 @@ export const load: LayoutLoad = async () => {
 			"isOrientationLocked": false,
 			"isActive": true,
 			"headerColor": "#1a1a2e",
-			"backgroundColor": "#282e33",
+			"backgroundColor": "#0a0a0f",
 			"bottomBarColor": "#282e33",
 			"BackButton": {
 				"isVisible": false
@@ -133,21 +138,13 @@ export const load: LayoutLoad = async () => {
 				"isAccessRequested": false,
 				"isAccessGranted": false
 			}
-		};
-
-		if (!tg) {
-			return { user: null, event: null };
 		}
 
-		const initData = tg.initData;
-		const user = tg.initDataUnsafe?.user;
-
-		await createUser(initData, user);
-		await getToken(initData, user.id.toString());
+		await ensureAuth(tg);
 
 		const [userMeResponse, eventResponse] = await Promise.all([
 			API.get("/v1/users/me"),
-			API.get("/v1/events/1")
+			API.get("/v1/events/2")
 		]);
 
 		return {
@@ -155,8 +152,12 @@ export const load: LayoutLoad = async () => {
 			event: eventResponse.data.status ? eventResponse.data.event : null
 		};
 
-	} catch (error) {
-		console.error("Layout init error:", error);
+	})().catch((err) => {
+		console.error("Layout init error:", err);
 		return { user: null, event: null };
-	}
+	});
+
+	return {
+		appData: appDataPromise
+	};
 };

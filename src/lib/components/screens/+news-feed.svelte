@@ -63,7 +63,7 @@
 		{/each}
 	</div>
 
-	<button class="w-full mt-3 py-2.5 text-sm text-blue-400 font-medium bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-all">
+	<button class="w-full mt-2 py-2.5 text-sm text-blue-400 font-medium bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-all">
 		Все новости →
 	</button>
 </section>

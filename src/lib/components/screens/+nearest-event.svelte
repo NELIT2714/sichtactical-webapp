@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { EventItem } from "$lib/types/event";
+	import type { EventItem } from "$lib/context/js/types/event";
 	import { goto } from "$app/navigation";
 
 	import Event from "$lib/components/ui/+event.svelte"

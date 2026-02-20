@@ -5,10 +5,9 @@
 	import Header from "$lib/components/+header.svelte";
 	import NoEvents from "$lib/components/screens/+no-events.svelte";
 
-	export let data;
+	import SkeletonEvents from "$lib/components/skeletons/+events.svelte";
 
-	$: eventsResponse = data.eventsResponse;
-	$: events = eventsResponse?.events || [];
+	export let data;
 </script>
 
 <Header>
@@ -16,14 +15,20 @@
 	<p class="text-[13px] text-white/50">Предстоящие игры</p>
 </Header>
 
-<section use:fadeUp={{ delayStep: 100 }}>
-	<div class="opacity-0 md:container md:mx-auto px-4 py-4 flex flex-col gap-4">
-		{#if events.length > 0}
-			{#each events as e}
-				<Event eventInfo={e}/>
-			{/each}
-		{:else}
-			<NoEvents />
-		{/if}
-	</div>
+<section class="md:container md:mx-auto px-4 py-4">
+	{#await data.appData}
+		<SkeletonEvents />
+	{:then appData}
+		<div use:fadeUp={{ delayStep: 100 }}>
+			<div class="opacity-0 flex flex-col gap-4">
+				{#if appData.eventsResponse.events.length > 0}
+					{#each appData.eventsResponse.events as e}
+						<Event eventInfo={e}/>
+					{/each}
+				{:else}
+					<NoEvents />
+				{/if}
+			</div>
+		</div>
+	{/await}
 </section>
