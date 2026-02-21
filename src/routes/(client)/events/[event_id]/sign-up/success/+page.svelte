@@ -9,7 +9,11 @@
 
 	const lang = "ru";
 
-	let eventInfo: any;
+	let eventInfo: any = null;
+
+	data.eventPromise.then((eventResponse: any) => {
+		eventInfo = eventResponse?.event ?? null;
+	});
 </script>
 
 <Header>
@@ -23,9 +27,8 @@
 <section class="md:container md:mx-auto px-4 py-4">
 	{#await data.eventPromise}
 		<SkeletonSignUpSuccess />
-	{:then eventResponse}
-		{@const _ = (eventInfo = eventResponse.event)}
-		{@const eventDate = new Date(eventInfo.event_date)}
+	{:then}
+		{@const eventDate = eventInfo?.event_date && new Date(eventInfo.event_date)}
 
 		<div use:fadeUp={{ delayStep: 300 }} class="flex flex-col items-center gap-2">
 			<div class="relative w-28 h-28 flex items-center justify-center opacity-0 animate-ring-appear">
@@ -42,25 +45,27 @@
 				</p>
 			</div>
 
-			<div class="opacity-0 animate-fade-up-2 w-full bg-[#1a1a2e] rounded-xl p-4 border border-white/5">
-				<div class="flex items-start gap-3">
-					<div class="w-11 h-11 bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
-						<i class="bi bi-controller text-xl text-blue-400"></i>
-					</div>
-					<div>
-						<h3 class="font-display text-lg font-semibold tracking-wide mb-1">{eventInfo.event_data[lang].name}</h3>
-						<div class="flex items-center gap-2 text-xs text-white/50">
-							<span><i class="bi bi-calendar-event-fill"></i> {eventDate?.toLocaleDateString('ru-RU', {
-								day: '2-digit',
-								month: '2-digit',
-								year: 'numeric'
-							})}</span>
-							<span>•</span>
-							<span><i class="bi bi-clock-fill"></i> {eventInfo.start_time.slice(0, 5)} - {eventInfo.end_time.slice(0, 5)}</span>
+			{#if eventInfo}
+				<div class="opacity-0 animate-fade-up-2 w-full bg-[#1a1a2e] rounded-xl p-4 border border-white/5">
+					<div class="flex items-start gap-3">
+						<div class="w-11 h-11 bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+							<i class="bi bi-controller text-xl text-blue-400"></i>
+						</div>
+						<div>
+							<h3 class="font-display text-lg font-semibold tracking-wide mb-1">{eventInfo.event_data[lang].name}</h3>
+							<div class="flex items-center gap-2 text-xs text-white/50">
+								<span><i class="bi bi-calendar-event-fill"></i> {eventDate?.toLocaleDateString('ru-RU', {
+									day: '2-digit',
+									month: '2-digit',
+									year: 'numeric'
+								})}</span>
+								<span>•</span>
+								<span><i class="bi bi-clock-fill"></i> {eventInfo.start_time.slice(0, 5)} - {eventInfo.end_time.slice(0, 5)}</span>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
+			{/if}
 
 			<div class="opacity-0 animate-fade-up-3 w-full">
 				<button on:click={() => goto("/", {invalidateAll: true})}

@@ -81,6 +81,10 @@
 	onMount(() => {
 		if (value) inputEl.value = format(value);
 	});
+
+	$: if (inputEl && !focused) {
+		inputEl.value = value ? format(value) : "";
+	}
 </script>
 
 <input

@@ -43,46 +43,21 @@ export const getToken = async (initData: string, telegramId: string) => {
 let initPromise: Promise<void> | null = null;
 
 export const ensureAuth = (tg: any): Promise<void> => {
-
-	console.log("🟡 ensureAuth called");
-
 	const token = get(authToken);
 
-	if (token) {
-		console.log("🟢 Token already exists → skip init");
-		return Promise.resolve();
-	}
-
-	if (initPromise) {
-		console.log("🟠 Init already running → reusing promise");
-		return initPromise;
-	}
-
-	console.log("🔵 No token → starting auth init");
+	if (token) return Promise.resolve();
+	if (initPromise) return initPromise;
 
 	initPromise = (async () => {
-		if (!tg) {
-			console.error("❌ Telegram WebApp not found");
-			throw new Error("Telegram WebApp not found");
-		}
+		if (!tg) throw new Error("Telegram WebApp not found");
 
 		const initData = tg.initData;
 		const user = tg.initDataUnsafe?.user;
 
-		if (!initData || !user) {
-			console.error("❌ Invalid Telegram data");
-			throw new Error("Invalid Telegram data");
-		}
+		if (!initData || !user) throw new Error("Invalid Telegram data");
 
-		console.log("📡 Creating user...");
 		await createUser(initData, user);
-		console.log("✅ User created");
-
-		console.log("🔐 Getting token...");
 		await getToken(initData, user.id.toString());
-		console.log("✅ Token received");
-
-		console.log("🟢 Auth init finished");
 	})();
 
 	return initPromise;
