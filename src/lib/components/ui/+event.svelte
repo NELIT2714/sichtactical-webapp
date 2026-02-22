@@ -34,8 +34,8 @@
 <div
 	class="flex flex-col gap-3 rounded-2xl p-4 border border-white/[0.08] active:scale-[0.98] transition-all {eventInfo.registered ? 'bg-green-500/10' : 'bg-[#1a1a2e]'}">
 	<div class="flex flex-col gap-2">
-		<div class="flex justify-between items-start">
-			<div class="flex flex-col gap-2.5">
+		<div class="flex justify-between items-start gap-2">
+			<div class="flex flex-col gap-2.5 min-w-0">
 				<div class="text-[17px] font-semibold">{eventInfo.event_data[lang].name}</div>
 
 				<div class="flex flex-col gap-0.5">
@@ -51,7 +51,7 @@
 				</div>
 			</div>
 
-			<div class="slot-badge {slotStatus}">
+			<div class="slot-badge shrink-0 {slotStatus}">
 				{slotStatus === "full" ? "Мест нет" : slotStatus === "few" ? "Мест мало" : "Места есть"}
 			</div>
 		</div>
