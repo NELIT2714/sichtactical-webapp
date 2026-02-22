@@ -144,8 +144,10 @@ export const load: LayoutLoad = async () => {
 
 		const [userMeResponse, eventResponse] = await Promise.all([
 			API.get("/v1/users/me"),
-			API.get("/v1/events/2")
+			API.get("/v1/events/nearest")
 		]);
+
+		console.log(eventResponse);
 
 		return {
 			user: userMeResponse.data.status ? userMeResponse.data.user : null,

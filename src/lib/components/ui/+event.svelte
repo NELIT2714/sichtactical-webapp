@@ -3,10 +3,11 @@
 	import { goto, invalidateAll } from "$app/navigation";
 	import { modal } from "$lib/context/js/store/modal.store";
 	import { API } from "$lib/context/js/axios";
+	import { hasEventStarted } from "$lib/context/js/events";
 
 	import CancelRegistrationModal from "$lib/components/dropdowns/+cancel-registration.svelte";
 
-	export let eventInfo : EventItem;
+	export let eventInfo: EventItem;
 
 	const lang = "ru";
 
@@ -25,12 +26,13 @@
 				await API.delete(`/v1/events/${eventInfo.id_event}/members`);
 				await invalidateAll();
 				modal.close();
-			}
+			},
 		});
-	}
+	};
 </script>
 
-<div class="flex flex-col gap-3 rounded-2xl p-4 border border-white/[0.08] active:scale-[0.98] transition-all {eventInfo.registered ? 'bg-green-500/10' : 'bg-[#1a1a2e]'}">
+<div
+	class="flex flex-col gap-3 rounded-2xl p-4 border border-white/[0.08] active:scale-[0.98] transition-all {eventInfo.registered ? 'bg-green-500/10' : 'bg-[#1a1a2e]'}">
 	<div class="flex flex-col gap-2">
 		<div class="flex justify-between items-start">
 			<div class="flex flex-col gap-2.5">
@@ -39,7 +41,7 @@
 				<div class="flex flex-col gap-0.5">
 					<div class="flex items-center gap-1.5 text-[13px] text-white/50">
 						<span><i class="bi bi-calendar-event-fill"></i></span>
-						<span>{eventDate.toLocaleDateString('ru-RU', {day: '2-digit', month: 'long', year: 'numeric' })}</span>
+						<span>{eventDate.toLocaleDateString('ru-RU', { day: '2-digit', month: 'long', year: 'numeric' })}</span>
 					</div>
 
 					<div class="flex items-center gap-1.5 text-[13px] text-white/50">
@@ -99,23 +101,27 @@
 	<div class="flex flex-col gap-2">
 		{#if !eventInfo.registered}
 
-			{#if ["available", "few"].includes(slotStatus)}
-				<button on:click={() => goto(`/events/${eventInfo.id_event}/sign-up`)} class="cursor-pointer w-full py-3.5 bg-blue-600 text-white rounded-xl text-[15px] font-semibold active:scale-[0.97] active:opacity-80 transition-all">
+			{#if ["available", "few"].includes(slotStatus) && !hasEventStarted(eventInfo.event_date, eventInfo.start_time)}
+				<button on:click={() => goto(`/events/${eventInfo.id_event}/sign-up`)}
+								class="cursor-pointer w-full py-3.5 bg-blue-600 text-white rounded-xl text-[15px] font-semibold active:scale-[0.97] active:opacity-80 transition-all">
 					Быстрая запись
 				</button>
 			{/if}
 
-			<button on:click={() => goto(`/events/${eventInfo.id_event}`)} class="text-center cursor-pointer w-full py-3 bg-white/[0.08] text-white rounded-xl text-[15px] font-semibold active:scale-[0.97] active:opacity-80 transition-all">
+			<button on:click={() => goto(`/events/${eventInfo.id_event}`)}
+							class="text-center cursor-pointer w-full py-3 bg-white/[0.08] text-white rounded-xl text-[15px] font-semibold active:scale-[0.97] active:opacity-80 transition-all">
 				Подробнее
 			</button>
 
 		{:else}
 
-			<button on:click={() => goto(`/events/${eventInfo.id_event}`)} class="text-center cursor-pointer w-full py-3 bg-white/[0.08] text-white rounded-xl text-[15px] font-semibold active:scale-[0.97] active:opacity-80 transition-all">
+			<button on:click={() => goto(`/events/${eventInfo.id_event}`)}
+							class="text-center cursor-pointer w-full py-3 bg-white/[0.08] text-white rounded-xl text-[15px] font-semibold active:scale-[0.97] active:opacity-80 transition-all">
 				Подробнее
 			</button>
 
-			<button on:click={cancelRegistrationModal} class="cursor-pointer w-full py-3.5 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl text-[15px] font-semibold active:scale-[0.97] active:opacity-80 transition-all">
+			<button on:click={cancelRegistrationModal}
+							class="cursor-pointer w-full py-3.5 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl text-[15px] font-semibold active:scale-[0.97] active:opacity-80 transition-all">
 				Отменить запись
 			</button>
 

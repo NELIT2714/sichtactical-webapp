@@ -3,12 +3,12 @@
 	import { goto } from "$app/navigation";
 	import { fadeUp } from "$lib/context/js/ui/fadeUp";
 	import { validateFullName, validatePhone, validateRules } from "$lib/context/js/validation";
+	import { tick } from "svelte";
 
 	import LoadButton from "$lib/components/ui/+load-button.svelte";
 	import PhoneInput from "$lib/components/ui/+phone-input.svelte";
 	import Header from "$lib/components/+header.svelte";
 	import SkeletonSignUp from "$lib/components/skeletons/+sign-up.svelte";
-	import { tick } from "svelte";
 
 	const lang = "ru";
 	export let data;
@@ -43,9 +43,13 @@
 	const initUserData = () => {
 		const user = data?.user;
 		if (!user) return;
-		signUpData.full_name = user.telegram_data?.first_name ? `${user.telegram_data.first_name} ${user.telegram_data.last_name ?? ""}`.trim() : "";
-		signUpData.phone_number = user.telegram_data?.phone_number ?? "";
-		signUpData.call_sign = user.call_sign ?? null;
+
+		const lastData = user?.last_data;
+		if (lastData) {
+			signUpData.full_name = lastData.full_name;
+			signUpData.phone_number = lastData.phone_number;
+			signUpData.call_sign = lastData.call_sign ?? null
+		}
 	};
 	initUserData();
 

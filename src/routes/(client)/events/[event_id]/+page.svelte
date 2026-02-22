@@ -4,6 +4,7 @@
 	import { getDuration } from "$lib/context/js/time";
 	import { modal } from "$lib/context/js/store/modal.store";
 	import { API } from "$lib/context/js/axios";
+	import { hasEventStarted } from "$lib/context/js/events";
 
 	import Header from "$lib/components/+header.svelte";
 	import CancelRegistrationModal from "$lib/components/dropdowns/+cancel-registration.svelte";
@@ -134,7 +135,7 @@
 
 				{#if !eventInfo.registered}
 
-					{#if ["available", "few"].includes(slotStatus)}
+					{#if ["available", "few"].includes(slotStatus) && !hasEventStarted(eventInfo.event_date, eventInfo.start_time)}
 						<button on:click={() => goto(`/events/${eventInfo.id_event}/sign-up`)}
 										class="cursor-pointer w-full py-4 bg-blue-600 text-white rounded-xl text-[17px] font-semibold active:scale-[0.97] active:opacity-80 transition-all">
 							Записаться на игру
