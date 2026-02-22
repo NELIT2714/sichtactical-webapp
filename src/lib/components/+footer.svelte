@@ -18,13 +18,13 @@
 			text: "Предстоящие события",
 			href: "/events"
 		},
-		// {
-		// 	id: "notifications",
-		// 	title: "Лента",
-		// 	icon: "bi bi-activity",
-		// 	text: "Активность",
-		// 	href: "/1234"
-		// },
+		{
+			id: "notifications",
+			title: "Лента",
+			icon: "bi bi-activity",
+			text: "Активность",
+			href: "/news"
+		},
 		// {
 		// 	id: "menu",
 		// 	title: "Ещё",
