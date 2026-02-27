@@ -23,7 +23,7 @@
 			title: "Лента",
 			icon: "bi bi-activity",
 			text: "Активность",
-			href: "/news"
+			href: "/notifications"
 		},
 		// {
 		// 	id: "menu",

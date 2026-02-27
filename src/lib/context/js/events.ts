@@ -1,7 +1,4 @@
-import { writable } from "svelte/store";
 import { API } from "$lib/context/js/axios";
-
-export const eventsStore = writable([]);
 
 export const getEvents = async () => {
 	try {
