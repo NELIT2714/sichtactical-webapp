@@ -9,7 +9,7 @@
 	$: ({ level, experience, experienceToNextLevel, levelProgress } = progressForXP(user.xp_total));
 </script>
 
-<section class="px-4 opacity-0">
+<section class="px-4">
 	<div class="bg-[#1a1a2e] rounded-2xl p-4 border border-blue-500/15 shadow-xl space-y-3">
 		<div class="space-y-1">
 			<h2 class="text-2xl font-bold">

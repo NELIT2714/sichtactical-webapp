@@ -15,7 +15,7 @@
 	let slotStatus: "available" | "few" | "full" = "available";
 </script>
 
-<section class="px-4 opacity-0 ">
+<section class="px-4">
 	<div class="flex items-center justify-between mb-3">
 		<h3 class="text-lg font-bold">Ближайшая игра</h3>
 		<button on:click={() => goto("/events")} class="cursor-pointer text-sm text-blue-400 font-medium">Все игры →</button>

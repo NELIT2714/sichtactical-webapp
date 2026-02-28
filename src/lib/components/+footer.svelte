@@ -18,25 +18,25 @@
 			text: "Предстоящие события",
 			href: "/events"
 		},
-		// {
-		// 	id: "notifications",
-		// 	title: "Лента",
-		// 	icon: "bi bi-activity",
-		// 	text: "Активность",
-		// 	href: "/1234"
-		// },
-		// {
-		// 	id: "menu",
-		// 	title: "Ещё",
-		// 	icon: "bi bi-three-dots",
-		// 	text: "",
-		// 	href: "/1234"
-		// },
+		{
+			id: "notifications",
+			title: "Лента",
+			icon: "bi bi-activity",
+			text: "Активность",
+			href: "/notifications"
+		},
+		{
+			id: "more",
+			title: "Ещё",
+			icon: "bi bi-three-dots",
+			text: "Дополнительно",
+			href: "/more"
+		},
 	];
 </script>
 
 <footer>
-	<div class="fixed flex justify-around bottom-0 left-0 right-0 bg-[#1a1a2e] border-t border-white/5 px-2 py-2 pb-4 z-[1000] items-center">
+	<div class="fixed flex justify-around bottom-0 left-0 right-0 bg-[#1a1a2e] border-t border-white/5 px-2 py-2 pb-4 z-1000 items-center">
 		{#each links as l}
 			<button on:click={() => {
 				if (page.url.pathname !== l.href) {
