@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { fadeUp } from "$lib/context/js/ui/fadeUp";
 	import { goto } from "$app/navigation";
+	import { type NotificationItem, } from "$lib/context/js/types/notification";
+
 	import {
 		CATEGORY_CONFIG,
-		groupNotificationsByDate,
 		formatNotificationTime,
-		type NotificationItem
-	} from "$lib/context/js/types/notification";
+		groupNotificationsByDate,
+	} from "$lib/context/js/notifications.js";
 
 	import Header from "$lib/components/+header.svelte";
 

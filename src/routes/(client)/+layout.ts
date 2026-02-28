@@ -1,6 +1,7 @@
 import type { LayoutLoad } from "./$types";
 import { API } from "$lib/context/js/axios";
 import { createUser, ensureAuth, getToken } from "$lib/context/js/auth";
+import { getAnnouncementNotifications } from "$lib/context/js/notifications";
 import { browser } from "$app/environment";
 
 export const ssr = false;
@@ -142,16 +143,18 @@ export const load: LayoutLoad = async () => {
 
 		await ensureAuth(tg);
 
-		const [userMeResponse, eventResponse] = await Promise.all([
+		const [userMeResponse, eventResponse, announcements] = await Promise.all([
 			API.get("/v1/users/me"),
-			API.get("/v1/events/nearest")
+			API.get("/v1/events/nearest"),
+			getAnnouncementNotifications()
 		]);
 
 		console.log(eventResponse);
 
 		return {
 			user: userMeResponse.data.status ? userMeResponse.data.user : null,
-			event: eventResponse.data.status ? eventResponse.data.event : null
+			event: eventResponse.data.status ? eventResponse.data.event : null,
+			announcements
 		};
 
 	})().catch((err) => {

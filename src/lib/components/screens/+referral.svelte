@@ -1,7 +1,8 @@
 <script lang="ts">
+	import { goto } from "$app/navigation";
 	import type { User } from "$lib/context/js/types/user";
 
-	export let user : User
+	export let user: User;
 
 	const referralCode = user.referral_code;
 
@@ -11,13 +12,13 @@
 		navigator.clipboard.writeText(referralCode);
 		copied = true;
 		setTimeout(() => (copied = false), 3000);
-	}
+	};
 </script>
 
-<section class="px-4 opacity-0">
+<section class="px-4">
 	<h3 class="text-lg font-bold mb-3">Приглашайте друзей</h3>
 
-	<div class="bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-2xl p-5 border border-purple-500/30">
+	<div class="bg-linear-to-br from-purple-500/20 to-pink-500/20 rounded-2xl p-5 border border-purple-500/30">
 		<div class="mb-3">
 			<h4 class="font-semibold mb-1">Получайте награды вместе!</h4>
 			<p class="text-sm text-white/60">Вы: 500 XP + 15 zł за первую игру друга</p>
@@ -35,6 +36,10 @@
 			<button on:click={copyToClipboard} class="flex-1 py-2.5 bg-white/10 hover:bg-white/15 text-white text-sm font-semibold rounded-lg transition-all flex items-center justify-center gap-2">
 				<i class="bi bi-copy"></i>
 				{copied ? "Скопировано!" : "Копировать"}
+			</button>
+			<button on:click={() => goto('/more/referral')} class="flex-1 py-2.5 bg-purple-600/70 hover:bg-purple-600/90 text-white text-sm font-semibold rounded-lg transition-all flex items-center justify-center gap-2">
+				<i class="bi bi-arrow-right"></i>
+				Подробнее
 			</button>
 		</div>
 	</div>
