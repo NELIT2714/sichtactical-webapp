@@ -99,22 +99,21 @@
 				</div>
 
 				<!-- Stats grid -->
-				<div class="grid grid-cols-2 gap-2.5">
-					<div class="bg-[#1a1a2e] rounded-xl p-3.5 border border-purple-500/15 text-center">
-						<div class="text-xs text-white/50 uppercase tracking-wide mb-1">Приглашено</div>
-						<div class="text-2xl font-bold text-purple-400">{stats?.total_invited}</div>
+				<div class="flex flex-col gap-2.5">
+					<div class="grid grid-cols-2 gap-2.5">
+						<div class="bg-[#1a1a2e] rounded-xl p-3.5 border border-white/5 text-center">
+							<div class="text-xs text-white/50 uppercase tracking-wide mb-1">Приглашено</div>
+							<div class="text-2xl font-bold">{stats?.total_invited}</div>
+						</div>
+						<div class="bg-[#1a1a2e] rounded-xl p-3.5 border border-white/5 text-center">
+							<div class="text-xs text-white/50 uppercase tracking-wide mb-1">Игр сыграно</div>
+							<div class="text-2xl font-bold">{stats?.total_games_by_friends}</div>
+						</div>
 					</div>
-					<div class="bg-[#1a1a2e] rounded-xl p-3.5 border border-green-500/15 text-center">
-						<div class="text-xs text-white/50 uppercase tracking-wide mb-1">Игр сыграно</div>
-						<div class="text-2xl font-bold text-green-400">{stats?.total_games_by_friends}</div>
-					</div>
-					<div class="bg-[#1a1a2e] rounded-xl p-3.5 border border-blue-500/15 text-center">
-						<div class="text-xs text-white/50 uppercase tracking-wide mb-1">XP заработано</div>
-						<div class="text-2xl font-bold text-blue-400">{stats?.total_xp_earned}</div>
-					</div>
-					<div class="bg-[#1a1a2e] rounded-xl p-3.5 border border-yellow-500/15 text-center">
-						<div class="text-xs text-white/50 uppercase tracking-wide mb-1">Баланс с рефов</div>
-						<div class="text-2xl font-bold text-yellow-400">{stats?.total_balance_earned.toFixed(2)} <span class="text-base">zł</span></div>
+
+					<div class="bg-[#1a1a2e] rounded-xl p-3.5 border border-white/5 text-center">
+						<div class="text-xs text-white/50 uppercase tracking-wide mb-1">Баланс с рефералов</div>
+						<div class="text-2xl font-bold">{stats?.total_balance_earned.toFixed(2)} <span class="text-base">zł</span></div>
 					</div>
 				</div>
 

@@ -23,6 +23,11 @@ export const CATEGORY_CONFIG: Record<NotificationCategory, CategoryConfig> = {
 		bgClass: 'bg-blue-600',
 		label: 'Событие',
 	},
+	SIGNUP: {
+		icon: 'bi-person-check-fill',
+		bgClass: 'bg-gradient-to-br from-teal-500 to-cyan-600',
+		label: 'Запись',
+	},
 	ACHIEVEMENT: {
 		icon: 'bi-trophy-fill',
 		bgClass: 'bg-gradient-to-br from-yellow-500 to-orange-500',
@@ -90,7 +95,5 @@ export const getNotifications = async (): Promise<NotificationsResponse | null> 
 export const getAnnouncementNotifications = async (): Promise<NotificationItem[]> => {
 	const response = await getNotifications();
 	if (!response) return [];
-	return response.notifications
-		.filter(n => n.category === 'SYSTEM' || n.category === 'ANNOUNCEMENT')
-		.slice(0, 3);
+	return response.notifications.slice(0, 3);
 };

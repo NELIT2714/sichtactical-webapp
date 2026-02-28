@@ -1,15 +1,22 @@
 import type { LayoutLoad } from "./$types";
 import { API } from "$lib/context/js/axios";
-import { createUser, ensureAuth, getToken } from "$lib/context/js/auth";
+import { ensureAuth } from "$lib/context/js/auth";
 import { getAnnouncementNotifications } from "$lib/context/js/notifications";
+import type { NotificationItem } from "$lib/context/js/notifications";
 import { browser } from "$app/environment";
+
+type AppData = {
+	user: any | null;
+	event: any | null;
+	announcements: NotificationItem[];
+};
 
 export const ssr = false;
 
 export const load: LayoutLoad = async () => {
 
-	const appDataPromise = (async () => {
-		if (!browser) return { user: null, event: null };
+	const appDataPromise: Promise<AppData> = (async (): Promise<AppData> => {
+		if (!browser) return { user: null, event: null, announcements: [] };
 
 		// @ts-ignore
 		// const tg = window.Telegram?.WebApp;
@@ -159,7 +166,7 @@ export const load: LayoutLoad = async () => {
 
 	})().catch((err) => {
 		console.error("Layout init error:", err);
-		return { user: null, event: null };
+		return { user: null, event: null, announcements: [] };
 	});
 
 	return {

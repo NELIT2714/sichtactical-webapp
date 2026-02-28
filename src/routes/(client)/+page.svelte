@@ -31,14 +31,17 @@
 		<SkeletonNewsFeed />
 	{:then appData}
 		<div class="contents" use:fadeUp={{ delayStep: 300 }}>
-			<div class="opacity-0">
+			<div class="opacity-0 contents">
 				<UserProfile user={appData.user} />
 
 				{#if appData.event}
 					<NearestEvent eventInfo={appData.event} />
 				{/if}
 
-				<NewsFeed announcements={appData.announcements ?? []} />
+				<!--{#if appData.announcements?.length > 0}-->
+				<!--	<NewsFeed announcements={appData.announcements ?? []} />-->
+				<!--{/if}-->
+
 				<Referral user={appData.user} />
 			</div>
 		</div>

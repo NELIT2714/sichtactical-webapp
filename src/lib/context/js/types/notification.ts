@@ -1,4 +1,4 @@
-export type NotificationCategory = 'EVENT' | 'ACHIEVEMENT' | 'ANNOUNCEMENT' | 'SYSTEM';
+export type NotificationCategory = 'EVENT' | 'SIGNUP' | 'ACHIEVEMENT' | 'ANNOUNCEMENT' | 'SYSTEM';
 
 export type NotificationLocalizedData = {
 	title: string;

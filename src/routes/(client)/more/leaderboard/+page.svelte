@@ -54,7 +54,9 @@
 				<div class="opacity-0 bg-linear-to-br from-yellow-500/20 to-orange-500/20 rounded-2xl p-4 border border-yellow-500/30 mb-3">
 					<div class="flex items-start gap-3">
 						<div class="w-10 h-10 bg-linear-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center shrink-0">
-							<i class="bi bi-crown-fill text-white text-base"></i>
+<!--							<i class="bi bi-crown-fill text-white text-base"></i>-->
+<!--							<i class="bi bi-crown-fill text-white text-base"></i>-->
+							<i class="bi bi-trophy-fill text-white text-base"></i>
 						</div>
 						<div>
 							<h2 class="font-bold text-sm mb-1">Привилегии лидеров</h2>
@@ -93,11 +95,11 @@
 						<div class="px-4 py-3 flex items-center gap-3 border-b border-white/4 last:border-0 {isTop3 ? 'bg-white/2' : ''}">
 							<!-- Rank -->
 							<div class="w-7 shrink-0 text-center">
-								{#if isTop3}
-									<i class="bi {MEDAL_ICONS[idx]} text-base {MEDAL_COLORS[idx]}"></i>
-								{:else}
+								<!--{#if isTop3}-->
+								<!--	<i class="bi {MEDAL_ICONS[idx]} text-base {MEDAL_COLORS[idx]}"></i>-->
+								<!--{:else}-->
 									<span class="text-xs text-white/35 font-semibold">#{entry.rank}</span>
-								{/if}
+								<!--{/if}-->
 							</div>
 
 							<!-- Avatar -->
