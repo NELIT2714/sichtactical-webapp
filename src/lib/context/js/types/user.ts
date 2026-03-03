@@ -9,11 +9,17 @@ export type TelegramData = {
 	username: string;
 };
 
+export type AdminData = {
+	id_admin: number;
+	permissions: string[];
+};
+
 export type User = {
 	balance: number;
 	call_sign: string | null;
 	id_user: number;
 	id_user_telegram_data: number;
+	admin_data: AdminData | null;
 	referral_code: string;
 	telegram_data: TelegramData;
 	xp_total: number;

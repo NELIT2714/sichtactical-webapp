@@ -1,9 +1,7 @@
 import { get, writable } from "svelte/store";
 import { API } from "$lib/context/js/axios";
-import type { User } from "$lib/context/js/types/user";
-// "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMDMzNjQxODY5IiwidXNlcl9pZCI6NCwidGVsZWdyYW1faWQiOiIxMDMzNjQxODY5IiwiaWF0IjoxNzcxMTkwMTQ5LCJleHAiOjE3NzIwNTQxNDl9.Q_uFzjz7w0ig7djkSnSqKIezgfyiaXijiVDW2RrLNONHJHsv4TRUvovY-iFY4TLNpyCtlkjpo3GuuHYoJ02vlg"
-export const authToken = writable(null);
 
+export const authToken = writable(null);
 
 interface TelegramUser {
 	id: number;
@@ -14,7 +12,7 @@ interface TelegramUser {
 	is_premium?: boolean;
 }
 
-export const createUser = async (initData: string, user: TelegramUser) => {
+export const upsertUser = async (initData: string, user: TelegramUser) => {
 	return API.post("/v1/users/app", {
 		user_telegram_id: user.id,
 		first_name: user.first_name,
@@ -26,9 +24,9 @@ export const createUser = async (initData: string, user: TelegramUser) => {
 	});
 };
 
-export const getToken = async (initData: string, telegramId: string) => {
+export const getToken = async (initData: string) => {
 	const response = await API.post("/v1/users/init",
-		{ user_telegram_id: telegramId },
+		null,
 		{ headers: { "x-telegram-data": initData } }
 	);
 
@@ -56,8 +54,8 @@ export const ensureAuth = (tg: any): Promise<void> => {
 
 		if (!initData || !user) throw new Error("Invalid Telegram data");
 
-		await createUser(initData, user);
-		await getToken(initData, user.id.toString());
+		await upsertUser(initData, user);
+		await getToken(initData);
 	})();
 
 	return initPromise;

@@ -2,6 +2,14 @@
 	import { goto } from "$app/navigation";
 	import { fadeUp } from "$lib/context/js/ui/fadeUp";
 	import Header from "$lib/components/+header.svelte";
+	import SkeletonNewsFeed from "$lib/components/skeletons/+news-feed.svelte";
+	import UserProfile from "$lib/components/screens/+user-profile.svelte";
+	import NearestEvent from "$lib/components/screens/+nearest-event.svelte";
+	import SkeletonNearestEvent from "$lib/components/skeletons/+nearest-event.svelte";
+	import SkeletonUserProfile from "$lib/components/skeletons/+user-profile.svelte";
+	import Referral from "$lib/components/screens/+referral.svelte";
+
+	export let data;
 
 	const menuItems = [
 		{
@@ -14,6 +22,7 @@
 			border: "border-purple-500/25",
 			iconBg: "bg-linear-to-br from-purple-500 to-pink-500",
 			active: true,
+			admin_only: false,
 		},
 		{
 			id: "leaderboard",
@@ -25,6 +34,7 @@
 			border: "border-yellow-500/25",
 			iconBg: "bg-linear-to-br from-yellow-500 to-orange-500",
 			active: true,
+			admin_only: false,
 		},
 		{
 			id: "achievements",
@@ -36,6 +46,7 @@
 			border: "border-blue-500/25",
 			iconBg: "bg-linear-to-br from-blue-500 to-cyan-500",
 			active: false,
+			admin_only: false,
 		},
 		{
 			id: "settings",
@@ -47,7 +58,20 @@
 			border: "border-slate-500/25",
 			iconBg: "bg-slate-600",
 			active: false,
+			admin_only: false,
 		},
+		{
+			id: "admin",
+			href: "/more/admin",
+			icon: "bi-shield-lock-fill",
+			title: "Админ панель",
+			description: "Управление пользователями и контентом",
+			gradient: "from-red-500/20 to-rose-600/20",
+			border: "border-red-500/25",
+			iconBg: "bg-linear-to-br from-red-500 to-rose-600",
+			active: true,
+			admin_only: true,
+		}
 	];
 
 	const handleClick = (item: typeof menuItems[0]) => {
@@ -60,35 +84,40 @@
 	<p class="text-[13px] text-white/50">Дополнительно</p>
 </Header>
 
-<section use:fadeUp={{ delayStep: 100 }} class="md:container md:mx-auto px-4 py-4">
-	<div class="opacity-0">
-		{#each menuItems as item}
-			<button
-				type="button"
-				on:click={() => handleClick(item)}
-				disabled={!item.active}
-				class="w-full text-left mb-3 bg-linear-to-br {item.gradient} rounded-2xl p-4 border {item.border} transition-all
-					{item.active ? 'cursor-pointer hover:brightness-110 active:scale-[0.98]' : 'cursor-not-allowed opacity-50'}"
-			>
-				<div class="flex items-center gap-4">
-					<div class="w-12 h-12 {item.iconBg} rounded-xl flex items-center justify-center shrink-0 shadow-lg">
-						<i class="bi {item.icon} text-xl text-white"></i>
-					</div>
-					<div class="flex-1 min-w-0">
-						<div class="flex items-center gap-2">
-							<h3 class="font-semibold text-sm">{item.title}</h3>
-							{#if !item.active}
-								<span class="text-[10px] font-semibold text-white/40 bg-white/8 px-1.5 py-0.5 rounded-full uppercase tracking-wide">Скоро</span>
-							{/if}
-						</div>
-						<p class="text-xs text-white/55 mt-0.5">{item.description}</p>
-					</div>
-					{#if item.active}
-						<i class="bi bi-chevron-right text-sm text-white/30 shrink-0"></i>
+<section class="md:container md:mx-auto px-4 py-4">
+
+	{#await data.appData}
+		test
+	{:then appData}
+		{@const user = appData.user}
+
+		<div use:fadeUp={{ delayStep: 100 }}>
+			<div class="opacity-0">
+				{#each menuItems as item}
+					{#if (user.admin_data) || (!item.admin_only)}
+						<button type="button" on:click={() => handleClick(item)} disabled={!item.active} class="w-full text-left mb-3 bg-linear-to-br {item.gradient} rounded-2xl p-4 border {item.border} transition-all {item.active ? 'cursor-pointer hover:brightness-110 active:scale-[0.98]' : 'cursor-not-allowed opacity-50'}">
+							<div class="flex items-center gap-4">
+								<div class="w-12 h-12 {item.iconBg} rounded-xl flex items-center justify-center shrink-0 shadow-lg">
+									<i class="bi {item.icon} text-xl text-white"></i>
+								</div>
+								<div class="flex-1 min-w-0">
+									<div class="flex items-center gap-2">
+										<h3 class="font-semibold text-sm">{item.title}</h3>
+										{#if !item.active}
+											<span class="text-[10px] font-semibold text-white/40 bg-white/8 px-1.5 py-0.5 rounded-full uppercase tracking-wide">Скоро</span>
+										{/if}
+									</div>
+									<p class="text-xs text-white/55 mt-0.5">{item.description}</p>
+								</div>
+								{#if item.active}
+									<i class="bi bi-chevron-right text-sm text-white/30 shrink-0"></i>
+								{/if}
+							</div>
+						</button>
 					{/if}
-				</div>
-			</button>
-		{/each}
-	</div>
+				{/each}
+			</div>
+		</div>
+	{/await}
 </section>
 

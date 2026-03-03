@@ -1,21 +1,7 @@
 import { API } from "$lib/context/js/axios";
-import type {
-	NotificationCategory,
-	NotificationItem,
-	NotificationsResponse,
-	CategoryConfig,
-	DateGroup,
-} from "$lib/context/js/types/notification";
+import type { NotificationCategory, NotificationItem, NotificationsResponse, CategoryConfig, DateGroup, } from "$lib/context/js/types/notification";
 
-export type {
-	NotificationCategory,
-	NotificationItem,
-	NotificationsResponse,
-	CategoryConfig,
-	DateGroup,
-};
-
-// ─── Config ──────────────────────────────────────────────────────────────────
+export type { NotificationCategory, NotificationItem, NotificationsResponse, CategoryConfig, DateGroup };
 
 export const CATEGORY_CONFIG: Record<NotificationCategory, CategoryConfig> = {
 	EVENT: {
@@ -45,8 +31,6 @@ export const CATEGORY_CONFIG: Record<NotificationCategory, CategoryConfig> = {
 	},
 };
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-
 const getDaysWord = (days: number): string => {
 	const mod10 = days % 10;
 	const mod100 = days % 100;
@@ -58,9 +42,14 @@ const getDaysWord = (days: number): string => {
 export const groupNotificationsByDate = (notifications: NotificationItem[]): DateGroup[] => {
 	const now = new Date();
 	const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-	const groups: Map<string, NotificationItem[]> = new Map();
 
-	for (const notif of notifications) {
+	const sorted = [...notifications].sort(
+		(a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+	);
+
+	const groups: Map<string, { diffDays: number; items: NotificationItem[] }> = new Map();
+
+	for (const notif of sorted) {
 		const date = new Date(notif.created_at);
 		const dateStart = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 		const diffDays = Math.round((todayStart.getTime() - dateStart.getTime()) / (1000 * 60 * 60 * 24));
@@ -70,18 +59,18 @@ export const groupNotificationsByDate = (notifications: NotificationItem[]): Dat
 			diffDays === 1 ? 'Вчера' :
 			`${diffDays} ${getDaysWord(diffDays)} назад`;
 
-		if (!groups.has(label)) groups.set(label, []);
-		groups.get(label)!.push(notif);
+		if (!groups.has(label)) groups.set(label, { diffDays, items: [] });
+		groups.get(label)!.items.push(notif);
 	}
 
-	return Array.from(groups.entries()).map(([label, notifications]) => ({ label, notifications }));
+	return Array.from(groups.entries())
+		.sort(([, a], [, b]) => a.diffDays - b.diffDays)
+		.map(([label, { items }]) => ({ label, notifications: items }));
 };
 
 export const formatNotificationTime = (isoString: string): string => {
 	return new Date(isoString).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
 };
-
-// ─── API ─────────────────────────────────────────────────────────────────────
 
 export const getNotifications = async (): Promise<NotificationsResponse | null> => {
 	try {
