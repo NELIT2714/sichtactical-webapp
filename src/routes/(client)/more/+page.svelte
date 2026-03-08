@@ -62,7 +62,7 @@
 		},
 		{
 			id: "admin",
-			href: "/more/admin",
+			href: "/admin",
 			icon: "bi-shield-lock-fill",
 			title: "Админ панель",
 			description: "Управление пользователями и контентом",
