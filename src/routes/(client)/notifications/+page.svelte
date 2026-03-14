@@ -10,6 +10,7 @@
 	} from "$lib/context/js/notifications.js";
 
 	import Header from "$lib/components/+header.svelte";
+	import SkeletonNewsFeed from "$lib/components/skeletons/+news-feed.svelte";
 
 	export let data;
 
@@ -25,7 +26,7 @@
 
 <section class="md:container md:mx-auto px-4 py-4">
 	{#await data.appData}
-		loading...
+		<SkeletonNewsFeed />
 	{:then appData}
 		{@const notifications = appData?.notificationsResponse?.notifications ?? []}
 		{@const groups = groupNotificationsByDate(notifications)}

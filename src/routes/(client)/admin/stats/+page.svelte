@@ -4,3 +4,4 @@
 
 	onMount(() => goto("/admin/events", { replaceState: true }));
 </script>
+

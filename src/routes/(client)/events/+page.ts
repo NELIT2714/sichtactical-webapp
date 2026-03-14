@@ -2,8 +2,8 @@ import type { PageLoad } from "./$types";
 import { getEvents } from "$lib/context/js/events";
 
 export const load: PageLoad = async ({ parent }) => {
-	const parentData = await parent();
-	await parentData.appData;
+	// Keep parent reference (auth/theme) but avoid blocking on its promise to show skeleton instantly
+	await parent();
 
 	const initPromise = (async () => {
 		try {
@@ -17,5 +17,5 @@ export const load: PageLoad = async ({ parent }) => {
 
 	return {
 		appData: initPromise
-	}
+	};
 };

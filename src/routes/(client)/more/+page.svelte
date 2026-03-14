@@ -2,12 +2,6 @@
 	import { goto } from "$app/navigation";
 	import { fadeUp } from "$lib/context/js/ui/fadeUp";
 	import Header from "$lib/components/+header.svelte";
-	import SkeletonNewsFeed from "$lib/components/skeletons/+news-feed.svelte";
-	import UserProfile from "$lib/components/screens/+user-profile.svelte";
-	import NearestEvent from "$lib/components/screens/+nearest-event.svelte";
-	import SkeletonNearestEvent from "$lib/components/skeletons/+nearest-event.svelte";
-	import SkeletonUserProfile from "$lib/components/skeletons/+user-profile.svelte";
-	import Referral from "$lib/components/screens/+referral.svelte";
 
 	export let data;
 
@@ -87,7 +81,20 @@
 <section class="md:container md:mx-auto px-4 py-4">
 
 	{#await data.appData}
-		test
+		<div class="grid gap-3">
+			{#each Array(3) as _}
+				<div class="bg-white/5 border border-white/10 rounded-2xl p-4 animate-pulse">
+					<div class="flex items-center gap-4">
+						<div class="w-12 h-12 bg-white/10 rounded-xl"></div>
+						<div class="flex-1 space-y-2">
+							<div class="h-3 w-28 bg-white/10 rounded"></div>
+							<div class="h-2.5 w-44 bg-white/5 rounded"></div>
+						</div>
+						<div class="w-4 h-4 bg-white/10 rounded-full"></div>
+					</div>
+				</div>
+			{/each}
+		</div>
 	{:then appData}
 		{@const user = appData.user}
 
@@ -120,4 +127,3 @@
 		</div>
 	{/await}
 </section>
-

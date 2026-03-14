@@ -5,33 +5,10 @@
 	import "bootstrap-icons/font/bootstrap-icons.css";
 
 	const links = [
-		{
-			id: "start",
-			title: "Начало",
-			icon: "bi bi-hexagon-fill",
-			href: "/"
-		},
-		{
-			id: "events",
-			title: "События",
-			icon: "bi bi-calendar3",
-			text: "Предстоящие события",
-			href: "/events"
-		},
-		{
-			id: "notifications",
-			title: "Лента",
-			icon: "bi bi-activity",
-			text: "Активность",
-			href: "/notifications"
-		},
-		{
-			id: "more",
-			title: "Ещё",
-			icon: "bi bi-three-dots",
-			text: "Дополнительно",
-			href: "/more"
-		},
+		{ id: "start", title: "Начало", icon: "bi bi-hexagon-fill", href: "/" },
+		{ id: "events", title: "События", icon: "bi bi-calendar3", href: "/events" },
+		{ id: "notifications", title: "Лента", icon: "bi bi-activity", href: "/notifications" },
+		{ id: "more", title: "Ещё", icon: "bi bi-three-dots", href: "/more" },
 	];
 </script>
 
