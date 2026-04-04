@@ -3,6 +3,7 @@ import {
 	adminGetEvents,
 	adminGetUsers,
 	adminGetNotifications,
+	adminGetStats,
 } from "$lib/context/js/admin";
 
 export const load: LayoutLoad = async ({ parent }) => {
@@ -10,12 +11,13 @@ export const load: LayoutLoad = async ({ parent }) => {
 	await parentData.appData;
 
 	const adminData = (async () => {
-		const [events, users, notifications] = await Promise.all([
+		const [events, users, notifications, stats] = await Promise.all([
 			adminGetEvents(),
 			adminGetUsers(),
 			adminGetNotifications(),
+			adminGetStats(),
 		]);
-		return { events, users, notifications };
+		return { events, users, notifications, stats };
 	})();
 
 	return { adminData };

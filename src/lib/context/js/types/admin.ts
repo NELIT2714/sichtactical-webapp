@@ -1,5 +1,30 @@
-// ─── Admin Event ──────────────────────────────────────────────────────────────
 export type AdminEventStatus = "upcoming" | "active" | "finished";
+
+export type AdminLocale = "ru" | "pl";
+
+export type AdminEventLocation = {
+	name: string;
+	address: string;
+	maps_url?: string;
+};
+
+export type AdminEventData = {
+	name: string;
+	short_description: string;
+	description: string;
+};
+
+export type AdminEventRule = {
+	id_event_rule?: number;
+	text: string;
+	position: number;
+};
+
+export type AdminEventProgramItem = {
+	id_event_program?: number;
+	text: string;
+	position: number;
+};
 
 export type AdminEvent = {
 	id_event: number;
@@ -7,28 +32,84 @@ export type AdminEvent = {
 	event_date: string;
 	start_time: string;
 	end_time: string;
-	location: string;
+	location: string | AdminEventLocation;
 	address: string;
 	cost: string;
 	members: number;
 	max_members: number;
 	status: AdminEventStatus;
 	short_description: string;
+	event_data?: Record<string, AdminEventData>;
+	event_rules?: Record<string, AdminEventRule[]>;
+	event_program?: Record<string, AdminEventProgramItem[]>;
+	participants?: AdminParticipant[];
+};
+
+export type AdminEventMemberRaw = {
+	id_event_member: number;
+	full_name: string;
+	call_sign: string | null;
+	phone_number: string;
+	registered: boolean;
+	registration_timestamp: string;
+	update_timestamp: string;
+	equipment?: string | null;
+};
+
+export type AdminEventRaw = {
+	id_event: number;
+	event_date: string;
+	start_time: string;
+	end_time: string;
+	max_members: number;
+	members: number;
+	cost: number;
+	registered?: boolean;
+	registration?: boolean;
+	location?: {
+		id_location?: number;
+		name?: string;
+		address?: string;
+		google_maps?: string;
+	} | null;
+	event_data?: Record<string, AdminEventData>;
+	event_rules?: Record<string, AdminEventRule[]>;
+	event_program?: Record<string, AdminEventProgramItem[]>;
+	event_members?: AdminEventMemberRaw[];
+};
+
+export type AdminEventsResponseRaw = {
+	events: AdminEventRaw[];
+	total_elements: number;
+	total_pages: number;
+	page: number;
+	size: number;
 };
 
 export type AdminEventForm = {
-	name: string;
-	date: string;
+	event_date: string;
 	start_time: string;
 	end_time: string;
-	location: string;
-	address: string;
-	cost: string;
 	max_members: string;
-	short_description: string;
+	cost: string;
+	location: AdminEventLocation;
+	event_data: Record<string, AdminEventData>;
+	event_rules: Record<string, AdminEventRule[]>;
+	event_program: Record<string, AdminEventProgramItem[]>;
 };
 
-// ─── Admin User ───────────────────────────────────────────────────────────────
+export type AdminEventPayload = {
+	event_date: string;
+	start_time: string;
+	end_time: string;
+	max_members: number;
+	cost: number;
+	location: AdminEventLocation;
+	event_data: Record<string, AdminEventData>;
+	event_rules: Record<string, AdminEventRule[]>;
+	event_program: Record<string, AdminEventProgramItem[]>;
+};
+
 export type AdminUser = {
 	id_user: number;
 	name: string;
@@ -42,9 +123,8 @@ export type AdminUser = {
 	joined: string;
 };
 
-// ─── Admin Participant ────────────────────────────────────────────────────────
 export type AdminParticipant = {
-	id_user: number;
+	id_event_member: number;
 	name: string;
 	call_sign: string | null;
 	phone: string;
@@ -54,7 +134,6 @@ export type AdminParticipant = {
 	attended: boolean | null;
 };
 
-// ─── Admin Notification ───────────────────────────────────────────────────────
 export type AdminNotifCategory = "EVENT" | "SIGNUP" | "ACHIEVEMENT" | "ANNOUNCEMENT" | "SYSTEM";
 
 export type AdminNotification = {
@@ -74,7 +153,6 @@ export type AdminNotifForm = {
 	description_pl: string;
 };
 
-// ─── Admin Stats ──────────────────────────────────────────────────────────────
 export type AdminStats = {
 	totalUsers: number;
 	activeUsers: number;

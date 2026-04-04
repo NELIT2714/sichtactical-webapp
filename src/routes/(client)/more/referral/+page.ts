@@ -5,6 +5,7 @@ export const load: PageLoad = async ({ parent }) => {
 	const parentData = await parent();
 
 	const initPromise = (async () => {
+		await parentData.authReady;
 		const referralStats = await getReferralStats();
 		const rootData = await parentData.appData;
 		return { referralStats, user: rootData.user };
@@ -14,4 +15,3 @@ export const load: PageLoad = async ({ parent }) => {
 		appData: initPromise
 	};
 };
-

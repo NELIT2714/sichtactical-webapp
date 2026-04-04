@@ -1,15 +1,23 @@
 import type {
 	AdminEvent,
+	AdminEventRaw,
+	AdminEventsResponseRaw,
 	AdminEventForm,
 	AdminEventStatus,
+	AdminLocale,
+	AdminEventData,
+	AdminEventRule,
+	AdminEventProgramItem,
 	AdminUser,
 	AdminParticipant,
+	AdminEventMemberRaw,
 	AdminNotification,
 	AdminNotifCategory,
 	AdminNotifForm,
 	AdminStats,
 	AdminActivity,
 } from "$lib/context/js/types/admin";
+import { API } from "$lib/context/js/axios";
 
 export type {
 	AdminEvent,
@@ -22,6 +30,70 @@ export type {
 	AdminNotifForm,
 	AdminStats,
 	AdminActivity,
+};
+
+let eventMembersCache = new Map<number, AdminEventMemberRaw[]>();
+
+const toTimeHM = (value: string | null | undefined) => {
+	if (!value) return "";
+	return value.length >= 5 ? value.slice(0, 5) : value;
+};
+
+const toCostString = (value: number | string | null | undefined) => {
+	if (value === null || value === undefined) return "";
+	const normalized = Number(value);
+	if (!Number.isNaN(normalized)) {
+		return Number.isInteger(normalized) ? String(normalized) : normalized.toFixed(2);
+	}
+	return String(value);
+};
+
+const resolveEventStatus = (eventDate: string, startTime: string, endTime: string): AdminEventStatus => {
+	const now = new Date();
+	const start = new Date(`${eventDate}T${startTime || "00:00:00"}`);
+	const end = new Date(`${eventDate}T${endTime || "23:59:59"}`);
+
+	if (!Number.isNaN(start.getTime()) && !Number.isNaN(end.getTime())) {
+		if (now >= start && now <= end) return "active";
+		if (now > end) return "finished";
+	}
+
+	return "upcoming";
+};
+
+const mapMemberToParticipant = (member: AdminEventMemberRaw): AdminParticipant => ({
+	id_event_member: member.id_event_member,
+	name: member.full_name,
+	call_sign: member.call_sign,
+	phone: member.phone_number,
+	telegram: "—",
+	games: 0,
+	registered_at: member.registration_timestamp,
+	attended: member.registered ?? null,
+});
+
+const mapRawEventToAdminEvent = (event: AdminEventRaw): AdminEvent => {
+	const ruData = event.event_data?.ru;
+	const participants = (event.event_members ?? []).map(mapMemberToParticipant);
+
+	return {
+		id_event: event.id_event,
+		name: ruData?.name ?? `Event #${event.id_event}`,
+		event_date: event.event_date,
+		start_time: toTimeHM(event.start_time),
+		end_time: toTimeHM(event.end_time),
+		location: event.location?.name ?? "",
+		address: event.location?.address ?? "",
+		cost: toCostString(event.cost),
+		members: event.members ?? participants.length,
+		max_members: event.max_members,
+		status: resolveEventStatus(event.event_date, event.start_time, event.end_time),
+		short_description: ruData?.short_description ?? "",
+		event_data: event.event_data,
+		event_rules: event.event_rules,
+		event_program: event.event_program,
+		participants,
+	};
 };
 
 // ─── Mock data (replace with API calls) ──────────────────────────────────────
@@ -63,11 +135,11 @@ export const MOCK_USERS: AdminUser[] = [
 ];
 
 export const MOCK_PARTICIPANTS: AdminParticipant[] = [
-	{ id_user: 1, name: "Aleksander Kowalski", call_sign: "Wolf", phone: "+48 600 111 222", telegram: "@wolf_ak", games: 12, registered_at: "2026-03-01 14:22", attended: true },
-	{ id_user: 2, name: "Dmytro Marchenko", call_sign: "Ghost", phone: "+48 601 333 444", telegram: "@ghost_dm", games: 7, registered_at: "2026-03-01 15:40", attended: false },
-	{ id_user: 3, name: "Ivan Petrenko", call_sign: null, phone: "+48 602 555 666", telegram: "@ivan_p", games: 3, registered_at: "2026-03-02 09:12", attended: null },
-	{ id_user: 4, name: "Marcin Wiśniewski", call_sign: "Eagle", phone: "+48 603 777 888", telegram: "@eagle_mw", games: 19, registered_at: "2026-03-02 11:05", attended: true },
-	{ id_user: 5, name: "Oleg Bondarenko", call_sign: "Steel", phone: "+48 604 999 000", telegram: "@steel_ob", games: 5, registered_at: "2026-03-03 18:30", attended: null },
+	{ id_event_member: 1, name: "Aleksander Kowalski", call_sign: "Wolf", phone: "+48 600 111 222", telegram: "@wolf_ak", games: 12, registered_at: "2026-03-01 14:22", attended: true },
+	{ id_event_member: 2, name: "Dmytro Marchenko", call_sign: "Ghost", phone: "+48 601 333 444", telegram: "@ghost_dm", games: 7, registered_at: "2026-03-01 15:40", attended: false },
+	{ id_event_member: 3, name: "Ivan Petrenko", call_sign: null, phone: "+48 602 555 666", telegram: "@ivan_p", games: 3, registered_at: "2026-03-02 09:12", attended: null },
+	{ id_event_member: 4, name: "Marcin Wiśniewski", call_sign: "Eagle", phone: "+48 603 777 888", telegram: "@eagle_mw", games: 19, registered_at: "2026-03-02 11:05", attended: true },
+	{ id_event_member: 5, name: "Oleg Bondarenko", call_sign: "Steel", phone: "+48 604 999 000", telegram: "@steel_ob", games: 5, registered_at: "2026-03-03 18:30", attended: null },
 ];
 
 export const MOCK_NOTIFICATIONS: AdminNotification[] = [
@@ -100,11 +172,15 @@ export const adminGetActivity = async (): Promise<AdminActivity[]> => {
 
 export const adminGetEvents = async (): Promise<AdminEvent[]> => {
 	try {
-		// const res = await API.get("/v1/admin/events");
-		// return res.data.status ? res.data.response : [];
-		return MOCK_EVENTS;
+		const res = await API.get<{ status: boolean; response: AdminEventsResponseRaw }>("/v1/admin/events");
+		if (!res.data?.status) return [];
+
+		const rawEvents = res.data.response?.events ?? [];
+		eventMembersCache = new Map(rawEvents.map((event) => [event.id_event, event.event_members ?? []]));
+
+		return rawEvents.map(mapRawEventToAdminEvent);
 	} catch {
-		return [];
+		return MOCK_EVENTS;
 	}
 };
 
@@ -141,21 +217,29 @@ export const adminDeleteEvent = async (id: number): Promise<boolean> => {
 	}
 };
 
-export const adminGetParticipants = async (_eventId: number): Promise<AdminParticipant[]> => {
+export const adminGetParticipants = async (eventId: number): Promise<AdminParticipant[]> => {
 	try {
-		// const res = await API.get(`/v1/admin/events/${_eventId}/participants`);
-		// return res.data.status ? res.data.response : [];
-		return MOCK_PARTICIPANTS;
+		const cachedMembers = eventMembersCache.get(eventId);
+		if (cachedMembers && cachedMembers.length > 0) {
+			return cachedMembers.map(mapMemberToParticipant);
+		}
+
+		const res = await API.get<{ status: boolean; response: { event_members?: AdminEventMemberRaw[] } | AdminEventMemberRaw[] }>(`/v1/admin/events/${eventId}/participants`);
+		if (!res.data?.status) return [];
+
+		const response = res.data.response;
+		const members = Array.isArray(response) ? response : (response.event_members ?? []);
+		return members.map(mapMemberToParticipant);
 	} catch {
-		return [];
+		return MOCK_PARTICIPANTS;
 	}
 };
 
-export const adminSetAttendance = async (_eventId: number, _userId: number, attended: boolean): Promise<boolean> => {
+export const adminSetAttendance = async (_eventId: number, _eventMemberId: number, attended: boolean): Promise<boolean> => {
 	try {
-		// const res = await API.patch(`/v1/admin/events/${_eventId}/participants/${_userId}/attendance`, { attended });
+		// const res = await API.patch(`/v1/admin/events/${_eventId}/participants/${_eventMemberId}/attendance`, { attended });
 		// return res.data.status;
-		console.log("adminSetAttendance", _eventId, _userId, attended);
+		console.log("adminSetAttendance", _eventId, _eventMemberId, attended);
 		return true;
 	} catch {
 		return false;
@@ -246,3 +330,85 @@ export function slotStatus(members: number, max: number): "available" | "few" | 
 	const p = (members / max) * 100;
 	return p >= 100 ? "full" : p >= 70 ? "few" : "available";
 }
+
+export function createEmptyEventForm(locales: AdminLocale[]): AdminEventForm {
+	const eventData = Object.fromEntries(
+		locales.map((locale) => [locale, { name: "", short_description: "", description: "" }])
+	) as Record<string, AdminEventData>;
+
+	const eventRules = Object.fromEntries(
+		locales.map((locale) => [locale, []])
+	) as Record<string, AdminEventRule[]>;
+
+	const eventProgram = Object.fromEntries(
+		locales.map((locale) => [locale, []])
+	) as Record<string, AdminEventProgramItem[]>;
+
+	return {
+		event_date: "",
+		start_time: "",
+		end_time: "",
+		max_members: "",
+		cost: "",
+		location: {
+			name: "",
+			address: "",
+			maps_url: "",
+		},
+		event_data: eventData,
+		event_rules: eventRules,
+		event_program: eventProgram,
+	};
+}
+
+export function mapEventToForm(event: AdminEvent, locales: AdminLocale[]): AdminEventForm {
+	const initial = createEmptyEventForm(locales);
+	const location = typeof event.location === "string"
+		? { name: event.location, address: event.address ?? "", maps_url: "" }
+		: {
+			name: event.location.name ?? "",
+			address: event.location.address ?? event.address ?? "",
+			maps_url: event.location.maps_url ?? "",
+		};
+
+	const eventData = locales.reduce((acc, locale) => {
+		acc[locale] = {
+			name: event.event_data?.[locale]?.name ?? (locale === "ru" ? event.name : ""),
+			short_description: event.event_data?.[locale]?.short_description ?? (locale === "ru" ? event.short_description : ""),
+			description: event.event_data?.[locale]?.description ?? "",
+		};
+		return acc;
+	}, {} as Record<string, AdminEventData>);
+
+	const eventRules = locales.reduce((acc, locale) => {
+		acc[locale] = (event.event_rules?.[locale] ?? []).map((rule, index) => ({
+			...rule,
+			text: rule.text ?? "",
+			position: index + 1,
+		}));
+		return acc;
+	}, {} as Record<string, AdminEventRule[]>);
+
+	const eventProgram = locales.reduce((acc, locale) => {
+		acc[locale] = (event.event_program?.[locale] ?? []).map((item, index) => ({
+			...item,
+			text: item.text ?? "",
+			position: index + 1,
+		}));
+		return acc;
+	}, {} as Record<string, AdminEventProgramItem[]>);
+
+	return {
+		...initial,
+		event_date: event.event_date ?? "",
+		start_time: event.start_time ?? "",
+		end_time: event.end_time ?? "",
+		max_members: String(event.max_members ?? ""),
+		cost: String(event.cost ?? ""),
+		location,
+		event_data: eventData,
+		event_rules: eventRules,
+		event_program: eventProgram,
+	};
+}
+

@@ -2,11 +2,11 @@ import type { PageLoad } from "./$types";
 import { getNotifications } from "$lib/context/js/notifications";
 
 export const load: PageLoad = async ({ parent }) => {
-	// Parent may supply theme/auth, but don't await its data to keep UI responsive
-	await parent();
+	const parentData = await parent();
 
 	const initPromise = (async () => {
 		try {
+			await parentData.authReady;
 			const response = await getNotifications();
 			return { notificationsResponse: response };
 		} catch (error) {

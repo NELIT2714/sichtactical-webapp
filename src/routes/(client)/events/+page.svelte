@@ -21,8 +21,8 @@
 	{:then appData}
 		<div use:fadeUp={{ delayStep: 100 }}>
 			<div class="opacity-0 flex flex-col gap-4">
-				{#if appData.eventsResponse.events.length > 0}
-					{#each appData.eventsResponse.events as e}
+				{#if appData.eventsResponse.length > 0}
+					{#each appData.eventsResponse as e}
 						<Event eventInfo={e}/>
 					{/each}
 				{:else}

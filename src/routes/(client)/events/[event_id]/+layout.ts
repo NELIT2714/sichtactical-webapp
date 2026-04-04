@@ -4,6 +4,7 @@ import { redirect } from "@sveltejs/kit";
 
 export const load: LayoutLoad = async ({ params, parent }) => {
 	const parentData = await parent();
+	await parentData.authReady;
 	const rootData = await parentData.appData;
 
 	const eventID: number = parseInt(params.event_id, 10);

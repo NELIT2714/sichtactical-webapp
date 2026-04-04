@@ -52,7 +52,7 @@
 		</button>
 	</div>
 
-	<div class="overflow-y-auto flex-1 px-5 py-4 flex flex-col gap-4">
+	<div class="overflow-y-auto flex-1 px-5 py-4 flex flex-col gap-4 pb-24">
 		<div class="flex flex-col gap-1.5">
 			<p class="text-[11px] text-white/40 uppercase tracking-wide">Категория</p>
 			<div class="grid grid-cols-2 gap-1.5">
@@ -110,7 +110,7 @@
 		</div>
 	</div>
 
-	<div class="px-5 py-4 border-t border-white/[0.06] flex flex-col gap-2">
+	<div class="sticky bottom-0 px-5 pt-4 pb-[calc(env(safe-area-inset-bottom)+18px)] border-t border-white/[0.06] bg-[#1a1a2e] flex flex-col gap-3 shadow-[0_-12px_30px_rgba(0,0,0,0.45)]">
 		<button on:click={handleSubmit} disabled={loading}
 			class="cursor-pointer w-full py-3.5 bg-blue-600 text-white rounded-xl text-[15px] font-semibold active:scale-[0.97] active:opacity-80 transition-all flex items-center justify-center gap-2 disabled:opacity-60">
 			{#if loading}

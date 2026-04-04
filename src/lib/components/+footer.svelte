@@ -10,16 +10,20 @@
 		{ id: "notifications", title: "Лента", icon: "bi bi-activity", href: "/notifications" },
 		{ id: "more", title: "Ещё", icon: "bi bi-three-dots", href: "/more" },
 	];
+
+	const activeTab = $derived(
+		links.find(l => l.href === "/" ? page.url.pathname === "/" : page.url.pathname.startsWith(l.href))?.id ?? "start"
+	);
 </script>
 
 <footer>
 	<div class="fixed flex justify-around bottom-0 left-0 right-0 bg-[#1a1a2e] border-t border-white/5 px-2 py-2 pb-4 z-1000 items-center">
 		{#each links as l}
-			<button on:click={() => {
+			<button onclick={() => {
 				if (page.url.pathname !== l.href) {
 					goto(l.href, { invalidateAll: true });
 				}
-			}} class:active={page.url.pathname === l.href || page.url.pathname.startsWith(l.href + '/')} class="flex flex-col w-fit items-center gap-1 text-white/50 active:scale-95 transition-all duration-300 cursor-pointer">
+			}} class="flex flex-col w-fit items-center gap-1 active:scale-95 transition-all duration-300 cursor-pointer {activeTab === l.id ? 'text-white' : 'text-white/50'}">
 				<i class="{l.icon} text-[1.5rem] leading-none"></i>
 				<div class="text-[11px] font-medium">{l.title}</div>
 			</button>

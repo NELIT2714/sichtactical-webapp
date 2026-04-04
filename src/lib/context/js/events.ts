@@ -3,9 +3,16 @@ import { API } from "$lib/context/js/axios";
 export const getEvents = async () => {
 	try {
 		const responseEvents = await API.get("/v1/events")
-		return responseEvents.data.status ? responseEvents.data.response : null;
+		if (responseEvents.data.status) {
+			if (responseEvents.data.response && Array.isArray(responseEvents.data.response.events)) {
+				return responseEvents.data.response.events;
+			}
+			return Array.isArray(responseEvents.data.response) ? responseEvents.data.response : [];
+		}
+		return [];
 	} catch (err) {
-		return null;
+		console.error("getEvents error", err);
+		return [];
 	}
 }
 

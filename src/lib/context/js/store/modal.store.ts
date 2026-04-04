@@ -4,7 +4,7 @@ import type { SvelteComponent } from "svelte";
 interface ModalState {
 	component: typeof SvelteComponent | null;
 	props?: Record<string, any>;
-	type?: "center" | "bottom";
+	type?: "center" | "bottom" | "center-large";
 }
 
 const createModalStore = () => {
@@ -13,12 +13,16 @@ const createModalStore = () => {
 	return {
 		subscribe,
 
-		open(component: any, props = {}, type: "center" | "bottom" = "center") {
+		open(component: any, props = {}, type: "center" | "bottom" | "center-large" = "center") {
 			set({ component, props, type });
 		},
 
 		openBottom(component: any, props = {}) {
 			set({ component, props, type: "bottom" });
+		},
+
+		openCenterLarge(component: any, props = {}) {
+			set({ component, props, type: "center-large" });
 		},
 
 		close() {

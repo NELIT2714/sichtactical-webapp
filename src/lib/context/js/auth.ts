@@ -42,6 +42,7 @@ let initPromise: Promise<void> | null = null;
 
 export const ensureAuth = (tg: any): Promise<void> => {
 	const token = get(authToken);
+	console.log(token);
 
 	if (token) return Promise.resolve();
 	if (initPromise) return initPromise;

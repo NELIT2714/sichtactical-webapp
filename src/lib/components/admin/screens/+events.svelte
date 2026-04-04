@@ -30,6 +30,17 @@
 		finished: "bg-white/5 text-white/40 border-white/10",
 	};
 
+	const getEventLocationLabel = (ev: AdminEvent) => {
+		if (typeof ev.location === "string") return ev.location || "Локация не указана";
+		return ev.location.name || ev.location.address || "Локация не указана";
+	};
+
+	const getEventCostLabel = (ev: AdminEvent) => {
+		const value = (ev.cost ?? "").trim();
+		if (!value) return "—";
+		return /z\u0142|pln/i.test(value) ? value : `${value} zł`;
+	};
+
 	const openCreate = () => {
 		modal.openBottom(EventUpsert, { mode: "create", event: null, onSuccess: onRefresh });
 	};
@@ -44,7 +55,7 @@
 
 	const openParticipants = async (ev: AdminEvent) => {
 		const participants = await adminGetParticipants(ev.id_event);
-		modal.openBottom(EventParticipants, { event: ev, participants, onSuccess: onRefresh });
+		modal.openCenterLarge(EventParticipants, { event: ev, participants, onSuccess: onRefresh });
 	};
 </script>
 
@@ -79,8 +90,8 @@
 					<span class="px-2 py-1 rounded-lg text-[10px] font-semibold border shrink-0 {statusClass[ev.status]}">{statusLabel[ev.status]}</span>
 				</div>
 				<div class="flex flex-col gap-1.5">
-					<div class="flex items-center gap-2 text-xs text-white/50"><i class="bi bi-geo-alt-fill text-white/30"></i><span>{ev.location}</span></div>
-					<div class="flex items-center gap-2 text-xs text-white/50"><i class="bi bi-credit-card-fill text-white/30"></i><span>{ev.cost}</span></div>
+					<div class="flex items-center gap-2 text-xs text-white/50"><i class="bi bi-geo-alt-fill text-white/30"></i><span>{getEventLocationLabel(ev)}</span></div>
+					<div class="flex items-center gap-2 text-xs text-white/50"><i class="bi bi-credit-card-fill text-white/30"></i><span>{getEventCostLabel(ev)}</span></div>
 				</div>
 				<div class="flex flex-col gap-1">
 					<div class="flex justify-between items-center">

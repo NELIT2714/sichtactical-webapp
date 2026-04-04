@@ -18,7 +18,7 @@
 	};
 
 	const openDelete = (n: AdminNotification) => {
-		modal.openBottom(NotifDelete, { notification: n, onSuccess: onRefresh });
+		modal.open(NotifDelete, { notification: n, onSuccess: onRefresh });
 	};
 </script>
 
