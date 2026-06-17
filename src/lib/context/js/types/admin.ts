@@ -3,9 +3,10 @@ export type AdminEventStatus = "upcoming" | "active" | "finished";
 export type AdminLocale = "ru" | "pl";
 
 export type AdminEventLocation = {
+	id_location?: number;
 	name: string;
 	address: string;
-	maps_url?: string;
+	google_maps?: string;
 };
 
 export type AdminEventData = {
@@ -32,7 +33,7 @@ export type AdminEvent = {
 	event_date: string;
 	start_time: string;
 	end_time: string;
-	location: string | AdminEventLocation;
+	location: AdminEventLocation;
 	address: string;
 	cost: string;
 	members: number;
@@ -92,18 +93,6 @@ export type AdminEventForm = {
 	end_time: string;
 	max_members: string;
 	cost: string;
-	location: AdminEventLocation;
-	event_data: Record<string, AdminEventData>;
-	event_rules: Record<string, AdminEventRule[]>;
-	event_program: Record<string, AdminEventProgramItem[]>;
-};
-
-export type AdminEventPayload = {
-	event_date: string;
-	start_time: string;
-	end_time: string;
-	max_members: number;
-	cost: number;
 	location: AdminEventLocation;
 	event_data: Record<string, AdminEventData>;
 	event_rules: Record<string, AdminEventRule[]>;

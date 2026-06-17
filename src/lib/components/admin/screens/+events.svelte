@@ -50,7 +50,7 @@
 	};
 
 	const openDelete = (ev: AdminEvent) => {
-		modal.openBottom(EventDelete, { event: ev, onSuccess: onRefresh });
+		modal.open(EventDelete, { event: ev, onSuccess: onRefresh });
 	};
 
 	const openParticipants = async (ev: AdminEvent) => {

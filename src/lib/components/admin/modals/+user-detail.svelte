@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { modal } from "$lib/context/js/store/modal.store";
+	import ModalLayout from "$lib/components/ui/+modal-layout.svelte";
 	import { adminSetAdmin, adminBanUser } from "$lib/context/js/admin";
 	import type { AdminUser } from "$lib/context/js/admin";
 
@@ -40,8 +41,12 @@
 	};
 </script>
 
-<div class="w-full max-w-lg bg-[#1a1a2e] border border-white/[0.08] rounded-t-3xl overflow-hidden max-h-[80vh] flex flex-col">
-	<div class="flex items-center justify-between px-5 pt-5 pb-4 border-b border-white/[0.06]">
+<ModalLayout
+	on:close={() => modal.close()}
+	maxHeightClass="max-h-[80vh]"
+	bodyClass="overflow-y-auto flex-1 px-5 py-4 flex flex-col gap-3"
+>
+	<svelte:fragment slot="header">
 		<div class="flex items-center gap-3">
 			<div class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg border-2
 				{user.is_admin ? 'bg-red-500/20 border-red-500/40 text-red-400' : 'bg-white/8 border-white/15 text-white'}">
@@ -57,12 +62,8 @@
 				<p class="text-xs text-white/40">{user.name}</p>
 			</div>
 		</div>
-		<button on:click={() => modal.close()} aria-label="Закрыть" class="cursor-pointer w-8 h-8 bg-white/[0.06] rounded-full flex items-center justify-center active:scale-95 transition-all">
-			<i class="bi bi-x-lg text-sm text-white/60"></i>
-		</button>
-	</div>
+	</svelte:fragment>
 
-	<div class="overflow-y-auto flex-1 px-5 py-4 flex flex-col gap-3">
 		<div class="grid grid-cols-3 gap-2">
 			<div class="bg-blue-500/10 rounded-xl p-3 border border-blue-500/15 text-center">
 				<div class="text-[10px] text-white/40 uppercase tracking-wide">Уровень</div>
@@ -110,5 +111,5 @@
 				Заблокировать пользователя
 			</button>
 		</div>
-	</div>
-</div>
+
+</ModalLayout>

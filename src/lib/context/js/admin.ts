@@ -3,6 +3,7 @@ import type {
 	AdminEventRaw,
 	AdminEventsResponseRaw,
 	AdminEventForm,
+	AdminEventLocation,
 	AdminEventStatus,
 	AdminLocale,
 	AdminEventData,
@@ -22,6 +23,7 @@ import { API } from "$lib/context/js/axios";
 export type {
 	AdminEvent,
 	AdminEventForm,
+	AdminEventLocation,
 	AdminEventStatus,
 	AdminUser,
 	AdminParticipant,
@@ -47,6 +49,25 @@ const toCostString = (value: number | string | null | undefined) => {
 	}
 	return String(value);
 };
+
+const toEventPayload = (form: AdminEventForm, idEvent?: number) => ({
+	// payload matches backend DTO (JSON keys stay camel/mixed as in API contract)
+	...(idEvent !== undefined ? { id_event: idEvent } : {}),
+	event_date: form.event_date || null,
+	start_time: form.start_time || null,
+	end_time: form.end_time || null,
+	max_members: form.max_members ? Number(form.max_members) : null,
+	cost: form.cost ? Number(form.cost) : null,
+	location: {
+		id_location: form.location.id_location ?? null,
+		name: form.location.name,
+		address: form.location.address,
+		google_maps: form.location.google_maps ?? null,
+	},
+	event_data: form.event_data,
+	event_rules: form.event_rules,
+	event_program: form.event_program,
+});
 
 const resolveEventStatus = (eventDate: string, startTime: string, endTime: string): AdminEventStatus => {
 	const now = new Date();
@@ -75,6 +96,7 @@ const mapMemberToParticipant = (member: AdminEventMemberRaw): AdminParticipant =
 const mapRawEventToAdminEvent = (event: AdminEventRaw): AdminEvent => {
 	const ruData = event.event_data?.ru;
 	const participants = (event.event_members ?? []).map(mapMemberToParticipant);
+	const location = event.location ?? null;
 
 	return {
 		id_event: event.id_event,
@@ -82,8 +104,15 @@ const mapRawEventToAdminEvent = (event: AdminEventRaw): AdminEvent => {
 		event_date: event.event_date,
 		start_time: toTimeHM(event.start_time),
 		end_time: toTimeHM(event.end_time),
-		location: event.location?.name ?? "",
-		address: event.location?.address ?? "",
+		location: location
+			? {
+				id_location: location.id_location,
+				name: location.name ?? "",
+				address: location.address ?? "",
+				google_maps: location.google_maps ?? "",
+			}
+			: { name: "", address: "", google_maps: "" },
+		address: location?.address ?? "",
 		cost: toCostString(event.cost),
 		members: event.members ?? participants.length,
 		max_members: event.max_members,
@@ -117,12 +146,12 @@ export const MOCK_ACTIVITY: AdminActivity[] = [
 ];
 
 export const MOCK_EVENTS: AdminEvent[] = [
-	{ id_event: 1, name: "Assault #12", event_date: "2026-03-10", start_time: "10:00", end_time: "18:00", location: "Polygon Wschód", address: "", cost: "120 zł", members: 18, max_members: 20, status: "upcoming", short_description: "" },
-	{ id_event: 2, name: "Night Raid #5", event_date: "2026-03-17", start_time: "20:00", end_time: "02:00", location: "Polygon Zachód", address: "", cost: "100 zł", members: 12, max_members: 20, status: "upcoming", short_description: "" },
-	{ id_event: 3, name: "CQB Training", event_date: "2026-03-24", start_time: "09:00", end_time: "16:00", location: "CQB Arena", address: "", cost: "90 zł", members: 8, max_members: 15, status: "upcoming", short_description: "" },
-	{ id_event: 4, name: "Urban Ops #3", event_date: "2026-03-31", start_time: "10:00", end_time: "17:00", location: "Industrial Zone", address: "", cost: "110 zł", members: 0, max_members: 18, status: "upcoming", short_description: "" },
-	{ id_event: 5, name: "Assault #11", event_date: "2026-02-15", start_time: "10:00", end_time: "18:00", location: "Polygon Wschód", address: "", cost: "120 zł", members: 20, max_members: 20, status: "finished", short_description: "" },
-	{ id_event: 6, name: "Winter Raid", event_date: "2026-01-20", start_time: "10:00", end_time: "16:00", location: "Forest Zone", address: "", cost: "100 zł", members: 15, max_members: 16, status: "finished", short_description: "" },
+	{ id_event: 1, name: "Assault #12", event_date: "2026-03-10", start_time: "10:00", end_time: "18:00", location: { name: "Polygon Wschód", address: "", google_maps: "" }, address: "", cost: "120 zł", members: 18, max_members: 20, status: "upcoming", short_description: "" },
+	{ id_event: 2, name: "Night Raid #5", event_date: "2026-03-17", start_time: "20:00", end_time: "02:00", location: { name: "Polygon Zachód", address: "", google_maps: "" }, address: "", cost: "100 zł", members: 12, max_members: 20, status: "upcoming", short_description: "" },
+	{ id_event: 3, name: "CQB Training", event_date: "2026-03-24", start_time: "09:00", end_time: "16:00", location: { name: "CQB Arena", address: "", google_maps: "" }, address: "", cost: "90 zł", members: 8, max_members: 15, status: "upcoming", short_description: "" },
+	{ id_event: 4, name: "Urban Ops #3", event_date: "2026-03-31", start_time: "10:00", end_time: "17:00", location: { name: "Industrial Zone", address: "", google_maps: "" }, address: "", cost: "110 zł", members: 0, max_members: 18, status: "upcoming", short_description: "" },
+	{ id_event: 5, name: "Assault #11", event_date: "2026-02-15", start_time: "10:00", end_time: "18:00", location: { name: "Polygon Wschód", address: "", google_maps: "" }, address: "", cost: "120 zł", members: 20, max_members: 20, status: "finished", short_description: "" },
+	{ id_event: 6, name: "Winter Raid", event_date: "2026-01-20", start_time: "10:00", end_time: "16:00", location: { name: "Forest Zone", address: "", google_maps: "" }, address: "", cost: "100 zł", members: 15, max_members: 16, status: "finished", short_description: "" },
 ];
 
 export const MOCK_USERS: AdminUser[] = [
@@ -160,16 +189,6 @@ export const adminGetStats = async (): Promise<AdminStats | null> => {
 	}
 };
 
-export const adminGetActivity = async (): Promise<AdminActivity[]> => {
-	try {
-		// const res = await API.get("/v1/admin/activity");
-		// return res.data.status ? res.data.response : [];
-		return MOCK_ACTIVITY;
-	} catch {
-		return [];
-	}
-};
-
 export const adminGetEvents = async (): Promise<AdminEvent[]> => {
 	try {
 		const res = await API.get<{ status: boolean; response: AdminEventsResponseRaw }>("/v1/admin/events");
@@ -186,10 +205,8 @@ export const adminGetEvents = async (): Promise<AdminEvent[]> => {
 
 export const adminCreateEvent = async (form: AdminEventForm): Promise<boolean> => {
 	try {
-		// const res = await API.post("/v1/admin/events", form);
-		// return res.data.status;
-		console.log("adminCreateEvent", form);
-		return true;
+		const res = await API.post<{ status: boolean; response?: { event_id?: number } }>("/v1/admin/events", toEventPayload(form));
+		return !!res.data?.status;
 	} catch {
 		return false;
 	}
@@ -197,10 +214,8 @@ export const adminCreateEvent = async (form: AdminEventForm): Promise<boolean> =
 
 export const adminUpdateEvent = async (id: number, form: AdminEventForm): Promise<boolean> => {
 	try {
-		// const res = await API.put(`/v1/admin/events/${id}`, form);
-		// return res.data.status;
-		console.log("adminUpdateEvent", id, form);
-		return true;
+		const res = await API.post<{ status: boolean }>("/v1/admin/events", toEventPayload(form, id));
+		return !!res.data?.status;
 	} catch {
 		return false;
 	}
@@ -208,9 +223,7 @@ export const adminUpdateEvent = async (id: number, form: AdminEventForm): Promis
 
 export const adminDeleteEvent = async (id: number): Promise<boolean> => {
 	try {
-		// const res = await API.delete(`/v1/admin/events/${id}`);
-		// return res.data.status;
-		console.log("adminDeleteEvent", id);
+		await API.delete(`/v1/admin/events/${id}`);
 		return true;
 	} catch {
 		return false;
@@ -351,9 +364,10 @@ export function createEmptyEventForm(locales: AdminLocale[]): AdminEventForm {
 		max_members: "",
 		cost: "",
 		location: {
+			id_location: undefined,
 			name: "",
 			address: "",
-			maps_url: "",
+			google_maps: "",
 		},
 		event_data: eventData,
 		event_rules: eventRules,
@@ -363,13 +377,12 @@ export function createEmptyEventForm(locales: AdminLocale[]): AdminEventForm {
 
 export function mapEventToForm(event: AdminEvent, locales: AdminLocale[]): AdminEventForm {
 	const initial = createEmptyEventForm(locales);
-	const location = typeof event.location === "string"
-		? { name: event.location, address: event.address ?? "", maps_url: "" }
-		: {
-			name: event.location.name ?? "",
-			address: event.location.address ?? event.address ?? "",
-			maps_url: event.location.maps_url ?? "",
-		};
+	const location = {
+		id_location: event.location.id_location,
+		name: event.location.name ?? "",
+		address: event.location.address ?? event.address ?? "",
+		google_maps: event.location.google_maps ?? "",
+	};
 
 	const eventData = locales.reduce((acc, locale) => {
 		acc[locale] = {

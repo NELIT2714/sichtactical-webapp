@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { modal } from "$lib/context/js/store/modal.store";
+	import ModalLayout from "$lib/components/ui/+modal-layout.svelte";
 	import { adminCreateNotification, MOCK_STATS } from "$lib/context/js/admin";
 	import { CATEGORY_CONFIG } from "$lib/context/js/notifications";
 	import type { AdminNotifForm } from "$lib/context/js/admin";
@@ -41,18 +42,18 @@
 	};
 </script>
 
-<div class="w-full max-w-lg bg-[#1a1a2e] border border-white/[0.08] rounded-t-3xl overflow-hidden max-h-[90vh] flex flex-col">
-	<div class="flex items-center justify-between px-5 pt-5 pb-4 border-b border-white/[0.06]">
+<ModalLayout
+	on:close={() => modal.close()}
+	maxHeightClass="max-h-[90vh]"
+	bodyClass="overflow-y-auto flex-1 px-5 py-4 flex flex-col gap-4 pb-24"
+>
+	<svelte:fragment slot="header">
 		<div>
 			<h2 class="text-base font-bold">Новое уведомление</h2>
 			<p class="text-xs text-white/40 mt-0.5">Будет отправлено всем пользователям</p>
 		</div>
-		<button on:click={() => modal.close()} aria-label="Закрыть" class="cursor-pointer w-8 h-8 bg-white/[0.06] rounded-full flex items-center justify-center active:scale-95 transition-all">
-			<i class="bi bi-x-lg text-sm text-white/60"></i>
-		</button>
-	</div>
+	</svelte:fragment>
 
-	<div class="overflow-y-auto flex-1 px-5 py-4 flex flex-col gap-4 pb-24">
 		<div class="flex flex-col gap-1.5">
 			<p class="text-[11px] text-white/40 uppercase tracking-wide">Категория</p>
 			<div class="grid grid-cols-2 gap-1.5">
@@ -108,9 +109,9 @@
 				<span class="text-white/70 font-semibold">{totalUsers} пользователям</span> приложения.
 			</p>
 		</div>
-	</div>
 
-	<div class="sticky bottom-0 px-5 pt-4 pb-[calc(env(safe-area-inset-bottom)+18px)] border-t border-white/[0.06] bg-[#1a1a2e] flex flex-col gap-3 shadow-[0_-12px_30px_rgba(0,0,0,0.45)]">
+	<svelte:fragment slot="footer">
+		<div class="sticky bottom-0 px-5 pt-4 pb-[calc(env(safe-area-inset-bottom)+18px)] border-t border-white/[0.06] bg-[#1a1a2e] flex flex-col gap-3 shadow-[0_-12px_30px_rgba(0,0,0,0.45)]">
 		<button on:click={handleSubmit} disabled={loading}
 			class="cursor-pointer w-full py-3.5 bg-blue-600 text-white rounded-xl text-[15px] font-semibold active:scale-[0.97] active:opacity-80 transition-all flex items-center justify-center gap-2 disabled:opacity-60">
 			{#if loading}
@@ -124,5 +125,6 @@
 			class="cursor-pointer w-full py-3 bg-white/[0.06] text-white/60 rounded-xl text-[15px] font-semibold active:scale-[0.97] active:opacity-80 transition-all">
 			Отмена
 		</button>
-	</div>
-</div>
+		</div>
+	</svelte:fragment>
+</ModalLayout>
