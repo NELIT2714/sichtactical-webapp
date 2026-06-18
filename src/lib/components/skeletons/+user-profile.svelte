@@ -8,9 +8,9 @@
 					<div class="h-3.5 w-32 bg-slate-700 rounded"></div>
 					<div class="h-3.5 w-20 bg-slate-700 rounded"></div>
 				</div>
-				<div class="h-1.5 bg-slate-800 rounded-full overflow-hidden">
-					<div class="h-full rounded-full w-[68%] bg-gradient-to-r from-blue-800 to-blue-400 animate-[pulse_2.5s_cubic-bezier(0.4,0,0.6,1)_infinite]"></div>
-				</div>
+<!--				<div class="h-1.5 bg-slate-800 rounded-full overflow-hidden">-->
+<!--					<div class="h-full rounded-full w-[68%] bg-gradient-to-r from-blue-800 to-blue-400 animate-[pulse_2.5s_cubic-bezier(0.4,0,0.6,1)_infinite]"></div>-->
+<!--				</div>-->
 			</div>
 		</div>
 

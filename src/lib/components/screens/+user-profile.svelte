@@ -16,22 +16,22 @@
 				{user.call_sign || `${user.telegram_data.first_name}${user.telegram_data.last_name ? ` ${user.telegram_data.last_name}` : ""}`}
 			</h2>
 
-			<div class="space-y-1.5">
-				<div class="flex justify-between items-center">
-					<span class="text-xs text-white/50">Опыт до следующего уровня</span>
-					<span class="text-xs font-semibold text-white/70">{experience} / {experienceToNextLevel} XP</span>
-				</div>
-				<div class="h-1.5 bg-white/[0.08] rounded-full overflow-hidden">
-					<div class="h-full rounded-full bg-gradient-to-r from-blue-800 to-blue-400 transition-all duration-500" style="width: {levelProgress}%;"></div>
-				</div>
-			</div>
+<!--			<div class="space-y-1.5">-->
+<!--				<div class="flex justify-between items-center">-->
+<!--					<span class="text-xs text-white/50">Опыт до следующего уровня</span>-->
+<!--					<span class="text-xs font-semibold text-white/70">{experience} / {experienceToNextLevel} XP</span>-->
+<!--				</div>-->
+<!--				<div class="h-1.5 bg-white/[0.08] rounded-full overflow-hidden">-->
+<!--					<div class="h-full rounded-full bg-gradient-to-r from-blue-800 to-blue-400 transition-all duration-500" style="width: {levelProgress}%;"></div>-->
+<!--				</div>-->
+<!--			</div>-->
 		</div>
 
-		<div class="grid grid-cols-2 gap-2.5">
-			<div class="bg-blue-500/10 rounded-lg p-2.5 border border-blue-500/20 text-center">
-				<div class="text-xs text-white/50 uppercase tracking-wide">Уровень</div>
-				<div class="text-lg font-bold text-blue-400">{level}</div>
-			</div>
+		<div class="grid grid-cols-1 gap-2.5">
+<!--			<div class="bg-blue-500/10 rounded-lg p-2.5 border border-blue-500/20 text-center">-->
+<!--				<div class="text-xs text-white/50 uppercase tracking-wide">Уровень</div>-->
+<!--				<div class="text-lg font-bold text-blue-400">{level}</div>-->
+<!--			</div>-->
 
 			<div class="bg-green-500/10 rounded-lg p-2.5 border border-green-500/20 text-center">
 				<div class="text-xs text-white/50 uppercase tracking-wide">Игры</div>
