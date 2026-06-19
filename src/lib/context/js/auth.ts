@@ -31,6 +31,8 @@ export const getToken = async (initData: string) => {
 		{ headers: { "x-telegram-data": initData } }
 	);
 
+	console.log(response);
+
 	if (!response.data.status) {
 		throw new Error("Auth failed");
 	}
