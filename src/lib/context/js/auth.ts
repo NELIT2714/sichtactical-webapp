@@ -13,6 +13,7 @@ interface TelegramUser {
 }
 
 export const upsertUser = async (initData: string, user: TelegramUser) => {
+	console.log("upsert");
 	console.log(initData, user);
 	return API.post("/v1/users/app", {
 		user_telegram_id: user.id,

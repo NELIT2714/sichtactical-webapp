@@ -55,6 +55,7 @@ export type AdminEventMemberRaw = {
 	registration_timestamp: string;
 	update_timestamp: string;
 	equipment?: string | null;
+	attended?: boolean | null;
 };
 
 export type AdminEventRaw = {

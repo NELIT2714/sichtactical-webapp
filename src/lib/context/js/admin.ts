@@ -82,6 +82,63 @@ const resolveEventStatus = (eventDate: string, startTime: string, endTime: strin
 	return "upcoming";
 };
 
+type CivilDateTime = {
+	year: number;
+	month: number;
+	day: number;
+	hour: number;
+	minute: number;
+	second: number;
+};
+
+const getWarsawCivilDateTime = (date = new Date()): CivilDateTime => {
+	const parts = new Intl.DateTimeFormat("en-GB", {
+		timeZone: "Europe/Warsaw",
+		year: "numeric",
+		month: "2-digit",
+		day: "2-digit",
+		hour: "2-digit",
+		minute: "2-digit",
+		second: "2-digit",
+		hour12: false,
+	}).formatToParts(date);
+
+	const pick = (type: Intl.DateTimeFormatPartTypes) => Number(parts.find((part) => part.type === type)?.value ?? 0);
+
+	return {
+		year: pick("year"),
+		month: pick("month"),
+		day: pick("day"),
+		hour: pick("hour"),
+		minute: pick("minute"),
+		second: pick("second"),
+	};
+};
+
+const parseCivilDateTime = (dateStr: string, timeStr: string): CivilDateTime | null => {
+	const [year, month, day] = dateStr.split("-").map(Number);
+	const [hour, minute, second = 0] = timeStr.split(":").map(Number);
+
+	if ([year, month, day, hour, minute, second].some((value) => Number.isNaN(value))) {
+		return null;
+	}
+
+	return { year, month, day, hour, minute, second };
+};
+
+const civilDateTimeToMs = (value: CivilDateTime) => Date.UTC(value.year, value.month - 1, value.day, value.hour, value.minute, value.second);
+
+export const isAttendanceEditable = (eventDate: string, startTime: string, now = new Date()): boolean => {
+	const start = parseCivilDateTime(eventDate, startTime || "00:00:00");
+	if (!start) return false;
+
+	const windowStart = civilDateTimeToMs(start) - 30 * 60 * 1000;
+	const windowEnd = civilDateTimeToMs({ ...start, hour: 23, minute: 59, second: 59 });
+	const current = civilDateTimeToMs(getWarsawCivilDateTime(now));
+
+	return current >= windowStart && current <= windowEnd;
+};
+
 const mapMemberToParticipant = (member: AdminEventMemberRaw): AdminParticipant => ({
 	id_event_member: member.id_event_member,
 	name: member.full_name,
@@ -90,7 +147,7 @@ const mapMemberToParticipant = (member: AdminEventMemberRaw): AdminParticipant =
 	telegram: "—",
 	games: 0,
 	registered_at: member.registration_timestamp,
-	attended: member.registered ?? null,
+	attended: member.attended ?? null,
 });
 
 const mapRawEventToAdminEvent = (event: AdminEventRaw): AdminEvent => {
@@ -136,14 +193,6 @@ export const MOCK_STATS: AdminStats = {
 	totalRevenue: "8 540 zł",
 	thisMonthRevenue: "1 280 zł",
 };
-
-export const MOCK_ACTIVITY: AdminActivity[] = [
-	{ icon: "bi-person-plus-fill", color: "bg-blue-600", text: "Новый пользователь: Aleksander K.", time: "5 мин назад" },
-	{ icon: "bi-calendar-check-fill", color: "bg-green-600", text: "Запись на ивент «Assault #12»", time: "12 мин назад" },
-	{ icon: "bi-megaphone-fill", color: "bg-gradient-to-br from-red-500 to-pink-500", text: "Отправлено объявление «Новые правила»", time: "1 ч назад" },
-	{ icon: "bi-calendar-plus-fill", color: "bg-indigo-600", text: "Создан ивент «Night Raid #5»", time: "3 ч назад" },
-	{ icon: "bi-person-x-fill", color: "bg-red-600", text: "Отмена записи: Dmytro M.", time: "4 ч назад" },
-];
 
 export const MOCK_EVENTS: AdminEvent[] = [
 	{ id_event: 1, name: "Assault #12", event_date: "2026-03-10", start_time: "10:00", end_time: "18:00", location: { name: "Polygon Wschód", address: "", google_maps: "" }, address: "", cost: "120 zł", members: 18, max_members: 20, status: "upcoming", short_description: "" },
@@ -248,11 +297,22 @@ export const adminGetParticipants = async (eventId: number): Promise<AdminPartic
 	}
 };
 
-export const adminSetAttendance = async (_eventId: number, _eventMemberId: number, attended: boolean): Promise<boolean> => {
+export const adminSetAttendance = async (eventId: number, eventMemberId: number, attended: boolean): Promise<boolean> => {
 	try {
-		// const res = await API.patch(`/v1/admin/events/${_eventId}/participants/${_eventMemberId}/attendance`, { attended });
-		// return res.data.status;
-		console.log("adminSetAttendance", _eventId, _eventMemberId, attended);
+		const res = await API.post<{ status: boolean }>(`/v1/admin/events/${eventId}/attendance`, {
+			id_event_member: eventMemberId,
+			attended,
+		});
+		if (!res.data?.status) return false;
+
+		const cachedMembers = eventMembersCache.get(eventId);
+		if (cachedMembers) {
+			eventMembersCache.set(
+				eventId,
+				cachedMembers.map((member) => member.id_event_member === eventMemberId ? { ...member, registered: attended } : member)
+			);
+		}
+
 		return true;
 	} catch {
 		return false;
