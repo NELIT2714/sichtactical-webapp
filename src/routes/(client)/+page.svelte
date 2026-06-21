@@ -38,7 +38,9 @@
 				{#if appData.event}
 					<NearestEvent eventInfo={appData.event} />
 				{:else}
-					<NoEvents />
+					<div class="px-4">
+						<NoEvents />
+					</div>
 				{/if}
 
 				<!--{#if appData.announcements?.length > 0}-->
