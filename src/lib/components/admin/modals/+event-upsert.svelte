@@ -161,20 +161,16 @@
 		<div class="grid grid-cols-1 gap-3">
 			<div class="flex flex-col gap-1.5">
 				<span class="text-[11px] text-white/40 uppercase tracking-wide">Дата</span>
-				<input bind:value={form.event_date} type="date" min={minDate}
-				       class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 text-sm text-white outline-none transition-all scheme-dark" />
+				<input bind:value={form.event_date} type="date" class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 text-sm text-white outline-none transition-all scheme-dark" />
 			</div>
-			<div class="flex items-end gap-2">
-				<div class="flex flex-col gap-1.5 flex-1 min-w-0">
+			<div class="flex items-center gap-2">
+				<div class="flex flex-col gap-1.5 w-full">
 					<span class="text-[11px] text-white/40 uppercase tracking-wide">Начало</span>
-					<input bind:value={form.start_time} type="time" min={minStartTime}
-					       class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3 py-3 text-sm text-white outline-none transition-all scheme-dark" />
+					<input bind:value={form.start_time} type="time" class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3 py-3 text-sm text-white outline-none transition-all scheme-dark" />
 				</div>
-				<span class="text-white/25 text-sm pb-3.5 shrink-0">—</span>
-				<div class="flex flex-col gap-1.5 flex-1 min-w-0">
+				<div class="flex flex-col gap-1.5 w-full">
 					<span class="text-[11px] text-white/40 uppercase tracking-wide">Конец</span>
-					<input bind:value={form.end_time} type="time" min={minEndTime}
-					       class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3 py-3 text-sm text-white outline-none transition-all scheme-dark" />
+					<input bind:value={form.end_time} type="time" class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3 py-3 text-sm text-white outline-none transition-all scheme-dark" />
 				</div>
 			</div>
 		</div>
