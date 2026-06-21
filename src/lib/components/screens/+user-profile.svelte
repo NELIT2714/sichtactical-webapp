@@ -28,6 +28,12 @@
 		</div>
 
 		<div class="grid grid-cols-2 gap-2.5">
+
+			<div class="col-span-2 bg-purple-500/10 rounded-lg p-2.5 border border-purple-500/20 text-center">
+				<div class="text-xs text-white/50 uppercase tracking-wide">XP</div>
+				<div class="text-lg font-bold text-purple-400">{user.xp_total}</div>
+			</div>
+
 			<div class="bg-blue-500/10 rounded-lg p-2.5 border border-blue-500/20 text-center">
 				<div class="text-xs text-white/50 uppercase tracking-wide">Уровень</div>
 				<div class="text-lg font-bold text-blue-400">{level}</div>
@@ -38,10 +44,6 @@
 				<div class="text-lg font-bold text-green-400">{user.games_played || 0}</div>
 			</div>
 
-			<div class="bg-purple-500/10 rounded-lg p-2.5 border border-purple-500/20 text-center">
-				<div class="text-xs text-white/50 uppercase tracking-wide">XP</div>
-				<div class="text-lg font-bold text-purple-400">{user.xp_total}</div>
-			</div>
 		</div>
 
 <!--		<div class="border-t border-white/10 pt-3">-->
