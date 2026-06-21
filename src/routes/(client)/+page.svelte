@@ -42,7 +42,7 @@
 				<!--	<NewsFeed announcements={appData.announcements ?? []} />-->
 				<!--{/if}-->
 
-				<Referral user={appData.user} />
+<!--				<Referral user={appData.user} />-->
 			</div>
 		</div>
 	{/await}
