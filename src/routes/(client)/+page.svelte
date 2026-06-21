@@ -4,6 +4,7 @@
 	import Header from "$lib/components/+header.svelte";
 	import UserProfile from "$lib/components/screens/+user-profile.svelte";
 	import NearestEvent from "$lib/components/screens/+nearest-event.svelte";
+	import NoEvents from "$lib/components/screens/+no-events.svelte";
 	import NewsFeed from "$lib/components/screens/+news-feed.svelte";
 	import Referral from "$lib/components/screens/+referral.svelte";
 
@@ -36,6 +37,8 @@
 
 				{#if appData.event}
 					<NearestEvent eventInfo={appData.event} />
+				{:else}
+					<NoEvents />
 				{/if}
 
 				<!--{#if appData.announcements?.length > 0}-->
