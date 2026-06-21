@@ -157,21 +157,21 @@
 
 	<div class="overflow-y-auto overscroll-contain flex-1 px-5 py-5 flex flex-col gap-5 pb-6">
 
-		<div class="flex flex-col gap-3">
+		<div class="grid grid-cols-1 gap-3">
 			<div class="flex flex-col gap-1.5">
 				<span class="text-[11px] text-white/40 uppercase tracking-wide">Дата</span>
 				<input bind:value={form.event_date} type="date" min={minDate}
-				       class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 text-sm text-white outline-none transition-all scheme-dark" />
+				       class="w-full min-w-0 bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 text-sm text-white outline-none transition-all scheme-dark" style="box-sizing: border-box;" />
 			</div>
 			<div class="flex flex-col gap-1.5">
 				<span class="text-[11px] text-white/40 uppercase tracking-wide">Начало</span>
 				<input bind:value={form.start_time} type="time" min={minStartTime}
-				       class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 text-sm text-white outline-none transition-all scheme-dark" />
+				       class="w-full min-w-0 bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 text-sm text-white outline-none transition-all scheme-dark" style="box-sizing: border-box;" />
 			</div>
 			<div class="flex flex-col gap-1.5">
 				<span class="text-[11px] text-white/40 uppercase tracking-wide">Конец</span>
 				<input bind:value={form.end_time} type="time" min={minEndTime}
-				       class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 text-sm text-white outline-none transition-all scheme-dark" />
+				       class="w-full min-w-0 bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 text-sm text-white outline-none transition-all scheme-dark" style="box-sizing: border-box;" />
 			</div>
 		</div>
 
