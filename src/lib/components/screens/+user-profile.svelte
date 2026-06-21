@@ -29,19 +29,22 @@
 
 		<div class="grid grid-cols-2 gap-2.5">
 
-			<div class="col-span-2 bg-purple-500/10 rounded-lg p-2.5 border border-purple-500/20 text-center">
-				<div class="text-xs text-white/50 uppercase tracking-wide">XP</div>
-				<div class="text-lg font-bold text-purple-400">{user.xp_total}</div>
+			<div class="bg-secondary rounded-xl border border-white/10 p-3.5 flex flex-col items-center gap-1.5 text-center">
+				<!-- иконка -->
+				<span class="text-[11px] text-white/50 uppercase tracking-widest">Уровень</span>
+				<span class="text-[22px] font-medium text-blue-400 leading-none">{level}</span>
 			</div>
 
-			<div class="bg-blue-500/10 rounded-lg p-2.5 border border-blue-500/20 text-center">
-				<div class="text-xs text-white/50 uppercase tracking-wide">Уровень</div>
-				<div class="text-lg font-bold text-blue-400">{level}</div>
+			<div class="bg-secondary rounded-xl border border-white/10 p-3.5 flex flex-col items-center gap-1.5 text-center">
+				<!-- иконка -->
+				<span class="text-[11px] text-white/50 uppercase tracking-widest">Игры</span>
+				<span class="text-[22px] font-medium text-green-400 leading-none">{user.games_played || 0}</span>
 			</div>
 
-			<div class="bg-green-500/10 rounded-lg p-2.5 border border-green-500/20 text-center">
-				<div class="text-xs text-white/50 uppercase tracking-wide">Игры</div>
-				<div class="text-lg font-bold text-green-400">{user.games_played || 0}</div>
+			<div class="col-span-2 bg-secondary rounded-xl border border-white/10 p-3.5 flex flex-col items-center gap-1.5 text-center">
+				<!-- иконка -->
+				<span class="text-[11px] text-white/50 uppercase tracking-widest">XP</span>
+				<span class="text-[22px] font-medium text-purple-400 leading-none">{user.xp_total}</span>
 			</div>
 
 		</div>
