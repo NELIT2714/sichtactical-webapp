@@ -12,7 +12,7 @@
 <section class="px-4">
 	<div class="bg-[#1a1a2e] rounded-2xl p-4 border border-blue-500/15 shadow-xl space-y-3">
 		<div class="space-y-1">
-			<h2 class="text-2xl font-bold">
+			<h2 class="text-2xl font-bold truncate">
 				{user.call_sign || `${user.telegram_data.first_name}${user.telegram_data.last_name ? ` ${user.telegram_data.last_name}` : ""}`}
 			</h2>
 
