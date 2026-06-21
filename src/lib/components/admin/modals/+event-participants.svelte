@@ -85,7 +85,7 @@
 
 	<svelte:fragment slot="headerActions">
 		<button on:click={() => exportParticipantsCSV(event.event_data?.ru?.name || event.name, participants)}
-			class="cursor-pointer flex items-center gap-1.5 px-3 py-1.5 bg-green-500/15 border border-green-500/25 text-green-400 rounded-lg text-xs font-semibold active:scale-[0.97] transition-all">
+		        class="cursor-pointer flex items-center gap-1.5 px-3 py-1.5 bg-green-500/15 border border-green-500/25 text-green-400 rounded-lg text-xs font-semibold active:scale-[0.97] transition-all">
 			<i class="bi bi-download text-xs"></i> CSV
 		</button>
 	</svelte:fragment>
@@ -108,47 +108,49 @@
 		</div>
 	</div>
 
-	<div class="bg-white/3 rounded-2xl border border-white/6 overflow-hidden">
+	<div class="bg-white/3 rounded-2xl border border-white/6 overflow-hidden flex flex-col" style="max-height: min(60vh, 520px)">
 		{#if participants.length === 0}
 			<div class="px-4 py-8 text-center text-sm text-white/35">Участников пока нет</div>
 		{:else}
-			{#each participants as p (p.id_event_member)}
-				<div class="px-4 py-3.5 border-b border-white/4 last:border-0 flex items-start gap-3">
-					<div class="w-9 h-9 bg-white/8 border border-white/10 rounded-full flex items-center justify-center shrink-0 font-bold text-sm text-white">
-						{(p.call_sign ?? p.name).charAt(0).toUpperCase()}
-					</div>
-					<div class="flex-1 min-w-0">
-						<div class="flex items-center gap-1.5 flex-wrap">
-							<span class="text-sm font-medium text-white">{p.name}</span>
-							{#if p.call_sign}<span class="text-xs text-white/40">«{p.call_sign}»</span>{/if}
+			<div class="overflow-y-auto overscroll-contain divide-y divide-white/4">
+				{#each participants as p (p.id_event_member)}
+					<div class="px-4 py-3.5 flex items-start gap-3">
+						<div class="w-9 h-9 bg-white/8 border border-white/10 rounded-full flex items-center justify-center shrink-0 font-bold text-sm text-white">
+							{(p.call_sign ?? p.name).charAt(0).toUpperCase()}
 						</div>
-						<div class="text-xs text-white/40 mt-0.5">{p.telegram} · {p.phone}</div>
-						<div class="text-[10px] text-white/25 mt-0.5">Записался: {formatRegisteredAt(p.registered_at)}</div>
+						<div class="flex-1 min-w-0">
+							<div class="flex items-center gap-1.5 flex-wrap">
+								<span class="text-sm font-medium text-white">{p.name}</span>
+								{#if p.call_sign}<span class="text-xs text-white/40">«{p.call_sign}»</span>{/if}
+							</div>
+							<div class="text-xs text-white/40 mt-0.5">{p.telegram} · {p.phone}</div>
+							<div class="text-[10px] text-white/25 mt-0.5">Записался: {formatRegisteredAt(p.registered_at)}</div>
 
-						<div class="mt-3 flex flex-wrap items-center gap-2">
-							<span class={`px-2 py-1 rounded-lg text-[10px] font-semibold border ${attendanceClass(p.attended)}`}>
-								{attendanceLabel(p.attended)}
-							</span>
-							<div class="ml-auto flex gap-2">
-											<button
-									type="button"
-									on:click={() => setAttendance(p, true)}
-									disabled={!attendanceEditable || savingAttendanceId === p.id_event_member}
-													class={`cursor-pointer px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all disabled:cursor-not-allowed disabled:opacity-50 ${p.attended === true ? 'bg-green-500/20 border-green-500/25 text-green-300' : 'bg-white/4 border-white/8 text-white/60 hover:bg-white/8'}`}>
-									{#if savingAttendanceId === p.id_event_member}<i class="bi bi-arrow-clockwise animate-spin text-[10px]"></i>{:else}Был{/if}
-								</button>
-								<button
-									type="button"
-									on:click={() => setAttendance(p, false)}
-									disabled={!attendanceEditable || savingAttendanceId === p.id_event_member}
-													class={`cursor-pointer px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all disabled:cursor-not-allowed disabled:opacity-50 ${p.attended === false ? 'bg-red-500/20 border-red-500/25 text-red-300' : 'bg-white/4 border-white/8 text-white/60 hover:bg-white/8'}`}>
-									Не был
-								</button>
+							<div class="mt-3 flex flex-wrap items-center gap-2">
+								<span class={`px-2 py-1 rounded-lg text-[10px] font-semibold border ${attendanceClass(p.attended)}`}>
+									{attendanceLabel(p.attended)}
+								</span>
+								<div class="ml-auto flex gap-2">
+									<button
+										type="button"
+										on:click={() => setAttendance(p, true)}
+										disabled={!attendanceEditable || savingAttendanceId === p.id_event_member}
+										class={`cursor-pointer px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all disabled:cursor-not-allowed disabled:opacity-50 ${p.attended === true ? 'bg-green-500/20 border-green-500/25 text-green-300' : 'bg-white/4 border-white/8 text-white/60 hover:bg-white/8'}`}>
+										{#if savingAttendanceId === p.id_event_member}<i class="bi bi-arrow-clockwise animate-spin text-[10px]"></i>{:else}Был{/if}
+									</button>
+									<button
+										type="button"
+										on:click={() => setAttendance(p, false)}
+										disabled={!attendanceEditable || savingAttendanceId === p.id_event_member}
+										class={`cursor-pointer px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all disabled:cursor-not-allowed disabled:opacity-50 ${p.attended === false ? 'bg-red-500/20 border-red-500/25 text-red-300' : 'bg-white/4 border-white/8 text-white/60 hover:bg-white/8'}`}>
+										Не был
+									</button>
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			{/each}
+				{/each}
+			</div>
 		{/if}
 	</div>
 </ModalLayout>

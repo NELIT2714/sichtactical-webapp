@@ -135,11 +135,11 @@
 			</div>
 		</div>
 
-		<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+		<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
 			<div class="flex flex-col gap-1.5">
 				<span class="text-[11px] text-white/40 uppercase tracking-wide">Локация</span>
 				<input bind:value={form.location.name} type="text" placeholder="Polygon Wschód"
-					class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 text-sm text-white placeholder:text-white/25 outline-none transition-all" />
+				       class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 text-sm text-white placeholder:text-white/25 outline-none transition-all" />
 				{#if form.location.id_location}
 					<div class="text-[10px] text-white/30">ID локации: {form.location.id_location}</div>
 				{/if}
@@ -147,28 +147,28 @@
 			<div class="flex flex-col gap-1.5">
 				<span class="text-[11px] text-white/40 uppercase tracking-wide">Адрес</span>
 				<input bind:value={form.location.address} type="text" placeholder="ul. Strzelecka 1, Warszawa"
-					class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 text-sm text-white placeholder:text-white/25 outline-none transition-all" />
+				       class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 text-sm text-white placeholder:text-white/25 outline-none transition-all" />
 			</div>
 			<div class="flex flex-col gap-1.5">
 				<span class="text-[11px] text-white/40 uppercase tracking-wide">Google Maps</span>
 				<input bind:value={form.location.google_maps} type="url" placeholder="https://maps.google.com/?q=..."
-					class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 text-sm text-white placeholder:text-white/25 outline-none transition-all" />
+				       class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 text-sm text-white placeholder:text-white/25 outline-none transition-all" />
 			</div>
 		</div>
 
-		<div class="flex flex-col gap-3">
+		<div class="grid grid-cols-2 gap-3">
 			<div class="flex flex-col gap-1.5">
 				<span class="text-[11px] text-white/40 uppercase tracking-wide">Цена</span>
 				<div class="relative">
 					<input bind:value={form.cost} type="text" inputmode="decimal" placeholder="100"
-						class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 pr-10 text-sm text-white placeholder:text-white/25 outline-none transition-all" />
+					       class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 pr-10 text-sm text-white placeholder:text-white/25 outline-none transition-all" />
 					<span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-white/30">zł</span>
 				</div>
 			</div>
 			<div class="flex flex-col gap-1.5">
 				<span class="text-[11px] text-white/40 uppercase tracking-wide">Макс. участников</span>
 				<input bind:value={form.max_members} type="text" inputmode="numeric" placeholder="20"
-					class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 text-sm text-white placeholder:text-white/25 outline-none transition-all" />
+				       class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 text-sm text-white placeholder:text-white/25 outline-none transition-all" />
 			</div>
 		</div>
 
@@ -177,7 +177,7 @@
 			<div class="flex gap-2">
 				{#each locales as loc}
 					<button type="button" on:click={() => (activeLocale = loc)}
-									class={`cursor-pointer px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all ${activeLocale === loc ? "bg-white/10 border-white/20 text-white" : "bg-white/3 border-white/6 text-white/45"}`}>
+					        class={`cursor-pointer px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all ${activeLocale === loc ? "bg-white/10 border-white/20 text-white" : "bg-white/3 border-white/6 text-white/45"}`}>
 						{loc === "ru" ? "Русский" : "Polski"}
 					</button>
 				{/each}
@@ -189,17 +189,17 @@
 			<div class="flex flex-col gap-1.5">
 				<span class="text-[11px] text-white/40 uppercase tracking-wide">Название</span>
 				<input bind:value={form.event_data[activeLocale].name} type="text" placeholder="Assault #13"
-					class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 text-sm text-white placeholder:text-white/25 outline-none transition-all" />
+				       class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 text-sm text-white placeholder:text-white/25 outline-none transition-all" />
 			</div>
 			<div class="flex flex-col gap-1.5">
 				<span class="text-[11px] text-white/40 uppercase tracking-wide">Краткое описание</span>
 				<textarea bind:value={form.event_data[activeLocale].short_description} rows="2" placeholder="Городская тактическая игра..."
-					class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 text-sm text-white placeholder:text-white/25 outline-none transition-all resize-none"></textarea>
+				          class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 text-sm text-white placeholder:text-white/25 outline-none transition-all resize-none"></textarea>
 			</div>
 			<div class="flex flex-col gap-1.5">
 				<span class="text-[11px] text-white/40 uppercase tracking-wide">Описание</span>
 				<textarea bind:value={form.event_data[activeLocale].description} rows="4" placeholder="Полное описание сценария, требования, подготовка..."
-					class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 text-sm text-white placeholder:text-white/25 outline-none transition-all"></textarea>
+				          class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 text-sm text-white placeholder:text-white/25 outline-none transition-all"></textarea>
 			</div>
 		</div>
 
@@ -215,12 +215,12 @@
 					<div class="text-xs text-white/35">Правила пока пустые</div>
 				{/if}
 				{#each form.event_rules[activeLocale] as rule, idx}
-								<div class="group rounded-xl border border-white/8 bg-white/3 p-3 flex items-start gap-2">
+					<div class="group rounded-xl border border-white/8 bg-white/3 p-3 flex items-start gap-2">
 						<div class="text-[10px] text-white/35 pt-1 w-6">#{idx + 1}</div>
-									<textarea bind:value={rule.text} rows="2"
-							class="flex-1 bg-transparent text-sm text-white outline-none resize-none" placeholder="Текст правила"></textarea>
+						<textarea bind:value={rule.text} rows="2"
+						          class="flex-1 bg-transparent text-sm text-white outline-none resize-none" placeholder="Текст правила"></textarea>
 						<button type="button" on:click={() => removeRule(activeLocale, idx)} aria-label="Удалить"
-							class="cursor-pointer w-8 h-8 rounded-lg bg-red-500/10 text-red-300 flex items-center justify-center hover:bg-red-500/20 transition-all">
+						        class="cursor-pointer w-8 h-8 rounded-lg bg-red-500/10 text-red-300 flex items-center justify-center hover:bg-red-500/20 transition-all">
 							<i class="bi bi-trash3"></i>
 						</button>
 					</div>
@@ -241,17 +241,17 @@
 				{/if}
 				{#each form.event_program[activeLocale] as item, idx}
 					<div class="group rounded-xl border border-white/8 bg-white/3 p-3 flex items-start gap-2"
-						role="group"
-						draggable="true"
-						on:dragstart={(e) => onProgramDragStart(activeLocale, idx, e)}
-						on:dragover={(e) => onProgramDragOver(activeLocale, idx, e)}
-						on:drop={onProgramDrop}
-						on:dragend={onProgramDrop}>
+					     role="group"
+					     draggable="true"
+					     on:dragstart={(e) => onProgramDragStart(activeLocale, idx, e)}
+					     on:dragover={(e) => onProgramDragOver(activeLocale, idx, e)}
+					     on:drop={onProgramDrop}
+					     on:dragend={onProgramDrop}>
 						<div class="w-8 h-8 rounded-lg bg-white/6 text-white/60 flex items-center justify-center cursor-move active:scale-95">
 							<i class="bi bi-grip-vertical"></i>
 						</div>
 						<textarea bind:value={item.text} rows="2"
-							class="flex-1 bg-transparent text-sm text-white outline-none resize-none" placeholder="Описание пункта программы"></textarea>
+						          class="flex-1 bg-transparent text-sm text-white outline-none resize-none" placeholder="Описание пункта программы"></textarea>
 						<div class="flex flex-col gap-1">
 							<button type="button" on:click={() => moveProgramItem(activeLocale, idx, Math.max(0, idx - 1))} class="w-8 h-8 rounded-lg bg-white/6 text-white/60 flex items-center justify-center hover:bg-white/12 transition-all" aria-label="Вверх">
 								<i class="bi bi-chevron-up"></i>
@@ -261,7 +261,7 @@
 							</button>
 						</div>
 						<button type="button" on:click={() => removeProgramItem(activeLocale, idx)} aria-label="Удалить"
-							class="cursor-pointer w-8 h-8 rounded-lg bg-red-500/10 text-red-300 flex items-center justify-center hover:bg-red-500/20 transition-all">
+						        class="cursor-pointer w-8 h-8 rounded-lg bg-red-500/10 text-red-300 flex items-center justify-center hover:bg-red-500/20 transition-all">
 							<i class="bi bi-trash3"></i>
 						</button>
 					</div>
@@ -272,14 +272,14 @@
 
 	<div class="sticky bottom-0 px-5 pt-4 pb-[calc(env(safe-area-inset-bottom)+24px)] border-t border-white/6 bg-[#1a1a2e] flex flex-col gap-2.5 shadow-[0_-12px_30px_rgba(0,0,0,0.45)] z-10">
 		<button on:click={handleSubmit} disabled={loading}
-			class="cursor-pointer w-full py-3.5 bg-blue-600 text-white rounded-xl text-[15px] font-semibold active:scale-[0.97] active:opacity-80 transition-all disabled:opacity-60 flex items-center justify-center gap-2">
+		        class="cursor-pointer w-full py-3.5 bg-blue-600 text-white rounded-xl text-[15px] font-semibold active:scale-[0.97] active:opacity-80 transition-all disabled:opacity-60 flex items-center justify-center gap-2">
 			{#if loading}
 				<i class="bi bi-arrow-clockwise animate-spin text-sm"></i>
 			{/if}
 			{mode === "create" ? "Создать ивент" : "Сохранить изменения"}
 		</button>
 		<button on:click={() => modal.close()}
-			class="cursor-pointer w-full py-3 bg-white/6 text-white/70 rounded-xl text-[15px] font-semibold active:scale-[0.97] active:opacity-80 transition-all">
+		        class="cursor-pointer w-full py-3 bg-white/6 text-white/70 rounded-xl text-[15px] font-semibold active:scale-[0.97] active:opacity-80 transition-all">
 			Отмена
 		</button>
 	</div>
