@@ -31,9 +31,7 @@
 	onDestroy(() => clearInterval(ticker));
 
 	$: minDate = warsawNow.date;
-
 	$: minStartTime = form.event_date === warsawNow.date ? warsawNow.time : undefined;
-
 	$: minEndTime = (() => {
 		if (form.event_date === warsawNow.date) {
 			if (form.start_time && form.start_time > warsawNow.time) return form.start_time;
@@ -158,17 +156,23 @@
 	</div>
 
 	<div class="overflow-y-auto overscroll-contain flex-1 px-5 py-5 flex flex-col gap-5 pb-6">
-		<div class="flex flex-col gap-1.5">
-			<span class="text-[11px] text-white/40 uppercase tracking-wide">Дата</span>
-			<input bind:value={form.event_date} type="date" class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 text-sm text-white outline-none transition-all scheme-dark" />
-		</div>
-		<div class="flex flex-col gap-1.5">
-			<span class="text-[11px] text-white/40 uppercase tracking-wide">Начало</span>
-			<input bind:value={form.start_time} type="time" class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3 py-3 text-sm text-white outline-none transition-all scheme-dark" />
-		</div>
-		<div class="flex flex-col gap-1.5">
-			<span class="text-[11px] text-white/40 uppercase tracking-wide">Конец</span>
-			<input bind:value={form.end_time} type="time" class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3 py-3 text-sm text-white outline-none transition-all scheme-dark" />
+
+		<div class="flex flex-col gap-3">
+			<div class="flex flex-col gap-1.5">
+				<span class="text-[11px] text-white/40 uppercase tracking-wide">Дата</span>
+				<input bind:value={form.event_date} type="date" min={minDate}
+				       class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 text-sm text-white outline-none transition-all scheme-dark" />
+			</div>
+			<div class="flex flex-col gap-1.5">
+				<span class="text-[11px] text-white/40 uppercase tracking-wide">Начало</span>
+				<input bind:value={form.start_time} type="time" min={minStartTime}
+				       class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 text-sm text-white outline-none transition-all scheme-dark" />
+			</div>
+			<div class="flex flex-col gap-1.5">
+				<span class="text-[11px] text-white/40 uppercase tracking-wide">Конец</span>
+				<input bind:value={form.end_time} type="time" min={minEndTime}
+				       class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 text-sm text-white outline-none transition-all scheme-dark" />
+			</div>
 		</div>
 
 		<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
