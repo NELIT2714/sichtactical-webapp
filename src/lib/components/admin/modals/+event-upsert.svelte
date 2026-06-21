@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onDestroy, onMount } from "svelte";
 	import { modal } from "$lib/context/js/store/modal.store";
 	import { adminCreateEvent, adminUpdateEvent, createEmptyEventForm, mapEventToForm } from "$lib/context/js/admin";
 	import type { AdminEvent, AdminEventForm, AdminLocale, AdminEventRule, AdminEventProgramItem } from "$lib/context/js/types/admin";
@@ -11,6 +12,45 @@
 	let activeLocale: AdminLocale = "ru";
 	let form: AdminEventForm = event ? mapEventToForm(event, locales) : createEmptyEventForm(locales);
 	let loading = false;
+
+	const TZ = "Europe/Warsaw";
+
+	const getWarsawNow = (): { date: string; time: string } => {
+		const now = new Date();
+		const datePart = new Intl.DateTimeFormat("sv-SE", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
+		const timePart = new Intl.DateTimeFormat("sv-SE", { timeZone: TZ, hour: "2-digit", minute: "2-digit" }).format(now);
+		return { date: datePart, time: timePart };
+	};
+
+	let warsawNow = getWarsawNow();
+	let ticker: ReturnType<typeof setInterval>;
+
+	onMount(() => {
+		ticker = setInterval(() => { warsawNow = getWarsawNow(); }, 60_000);
+	});
+	onDestroy(() => clearInterval(ticker));
+
+	$: minDate = warsawNow.date;
+
+	$: minStartTime = form.event_date === warsawNow.date ? warsawNow.time : undefined;
+
+	$: minEndTime = (() => {
+		if (form.event_date === warsawNow.date) {
+			if (form.start_time && form.start_time > warsawNow.time) return form.start_time;
+			return warsawNow.time;
+		}
+		return form.start_time || undefined;
+	})();
+
+	$: if (form.event_date === warsawNow.date && form.start_time && form.start_time < warsawNow.time) {
+		form = { ...form, start_time: "" };
+	}
+	$: if (form.event_date === warsawNow.date && form.end_time && form.end_time < warsawNow.time) {
+		form = { ...form, end_time: "" };
+	}
+	$: if (form.start_time && form.end_time && form.end_time <= form.start_time) {
+		form = { ...form, end_time: "" };
+	}
 
 	const addRule = (lang: AdminLocale) => {
 		const next: AdminEventRule[] = [...form.event_rules[lang], { text: "", position: form.event_rules[lang].length + 1 }];
@@ -121,17 +161,20 @@
 		<div class="grid grid-cols-1 gap-3">
 			<div class="flex flex-col gap-1.5">
 				<span class="text-[11px] text-white/40 uppercase tracking-wide">Дата</span>
-				<input bind:value={form.event_date} type="date" class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 text-sm text-white outline-none transition-all scheme-dark" />
+				<input bind:value={form.event_date} type="date" min={minDate}
+				       class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3.5 py-3 text-sm text-white outline-none transition-all scheme-dark" />
 			</div>
 			<div class="flex items-end gap-2">
 				<div class="flex flex-col gap-1.5 flex-1 min-w-0">
 					<span class="text-[11px] text-white/40 uppercase tracking-wide">Начало</span>
-					<input bind:value={form.start_time} type="time" class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3 py-3 text-sm text-white outline-none transition-all scheme-dark" />
+					<input bind:value={form.start_time} type="time" min={minStartTime}
+					       class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3 py-3 text-sm text-white outline-none transition-all scheme-dark" />
 				</div>
 				<span class="text-white/25 text-sm pb-3.5 shrink-0">—</span>
 				<div class="flex flex-col gap-1.5 flex-1 min-w-0">
 					<span class="text-[11px] text-white/40 uppercase tracking-wide">Конец</span>
-					<input bind:value={form.end_time} type="time" class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3 py-3 text-sm text-white outline-none transition-all scheme-dark" />
+					<input bind:value={form.end_time} type="time" min={minEndTime}
+					       class="w-full bg-white/4 border border-white/8 focus:border-blue-500/50 rounded-xl px-3 py-3 text-sm text-white outline-none transition-all scheme-dark" />
 				</div>
 			</div>
 		</div>
