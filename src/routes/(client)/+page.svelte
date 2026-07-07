@@ -21,9 +21,9 @@
 	// $: nearestEvent = events && events.length > 0 ? events[0] : null;
 </script>
 
-<Header>
-	<h1 class="text-xl font-bold uppercase">Sich Tactical</h1>
-</Header>
+<!--<Header>-->
+<!--	<h1 class="text-xl font-bold uppercase">Sich Tactical</h1>-->
+<!--</Header>-->
 
 <main class="md:container md:mx-auto py-4 flex flex-col gap-7">
 	{#await data.appData}

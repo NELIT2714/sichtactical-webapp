@@ -15,6 +15,7 @@ export type AdminData = {
 };
 
 export type User = {
+	games_played: number;
 	balance: number;
 	call_sign: string | null;
 	id_user: number;

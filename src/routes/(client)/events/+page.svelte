@@ -11,7 +11,7 @@
 </script>
 
 <Header>
-	<h1 class="text-xl font-bold mb-0.5 uppercase">Sich Tactical</h1>
+<!--	<h1 class="text-xl font-bold mb-0.5 uppercase">Sich Tactical</h1>-->
 	<p class="text-[13px] text-white/50">Предстоящие игры</p>
 </Header>
 
