@@ -5,7 +5,7 @@
 
 	const tabs = [
 		{ id: "events", path: "/admin/events", icon: "bi-calendar3", label: "Ивенты" },
-		{ id: "users", path: "/admin/users", icon: "bi-people-fill", label: "Юзеры" },
+		// { id: "users", path: "/admin/users", icon: "bi-people-fill", label: "Юзеры" },
 		// { id: "notifications", path: "/admin/notifications", icon: "bi-megaphone-fill", label: "Нотиф." },
 	];
 
